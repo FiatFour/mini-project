@@ -33,16 +33,19 @@ Route::middleware([
     // })->name('users.create');
     Route::get('/singout', [LoginController::class, 'logout'])->name('singout');
 
-    Route::controller(App\Http\Controllers\UserController::class)->group(function () {
-        Route::get('/users', 'index')->name('users.index');
-        Route::get('/users/create', 'create')->name('users.create');
-        Route::post('/users', 'store')->name('users.store');
+    // Route::controller(App\Http\Controllers\UserController::class)->group(function () {
+    //     Route::get('/users', 'index')->name('users.index');
+    //     Route::get('/users/create', 'create')->name('users.create');
+    //     Route::post('/users', 'store')->name('users.store');
 
-        Route::get('/users/edit/{id}', 'edit')->name('users.edit');
-        Route::get('/users/view/{id}', 'view')->name('users.view');
-        Route::put('/users/{id}', 'update')->name('users.update');
-        Route::delete('/users/{id}', 'destroy')->name('users.delete');
-    });
+    //     Route::get('/users/edit/{id}', 'edit')->name('users.edit');
+    //     Route::get('/users/view/{id}', 'view')->name('users.view');
+    //     Route::put('/users/{id}', 'update')->name('users.update');
+    //     Route::delete('/users/{id}', 'destroy')->name('users.delete');
+    // });
+
+    //TODO
+    Route::resource('users', App\Http\Controllers\UserController::class);
 
     Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
         Route::get('/categories', 'index')->name('categories.index');

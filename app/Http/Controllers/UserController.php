@@ -44,13 +44,30 @@ class UserController extends Controller
 
         $users2 = User::all();
 
-        return view('users.index', compact('users', 'keyword', 'username', 'name', 'users2'));
+        return view(
+            'users.index',
+            [
+                'users' => $users,
+                'keyword' => $keyword,
+                'username' => $username,
+                'name' => $name,
+                'users2' => $users2,
+            ]
+        );
     }
 
     public function create()
     {
+        $user = new User();
+        $page_title = __('manage.add') . __('users.page_title');
         // $userGenes = UserGene::orderBy('name', 'ASC')->get();
-        return view('users.create');
+        return view(
+            'users.form',
+            [
+                'user' => $user,
+                'page_title' => $page_title,
+            ]
+        );
     }
 
     /**
@@ -65,9 +82,16 @@ class UserController extends Controller
             'password' => 'required',
             'phone' => 'required|numeric',
         ]);
-
-        if ($validator->passes()) {
-            $user = new User();
+        //TODO
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->getMessageBag()->first()
+            ]);
+        }
+        //TODO
+        if ($request->test_form) {
+            $user = User::firstOrNew(['id' => $request->id]);
             $user->username = $request->username;
             $user->name = $request->name;
             $user->email = $request->email;
@@ -75,23 +99,39 @@ class UserController extends Controller
             $user->phone = $request->phone;
             $user->save();
 
-            $message = 'User added successfully.';
-            Session::flash('success', $message);
+            // $redirect = route('users.index');
             return response()->json([
-                'status' => true,
-                'message' => $message
+                'success' => true,
+                'redirect' => route('users.index'),
             ]);
         } else {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ]);
+            if ($validator->passes()) {
+                $user = new User();
+                $user->username = $request->username;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->phone = $request->phone;
+                $user->save();
+
+                $message = 'User added successfully.';
+                Session::flash('success', $message);
+                return response()->json([
+                    'status' => true,
+                    'message' => $message
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'errors' => $validator->errors()
+                ]);
+            }
         }
     }
 
-    public function edit(Request $request, $id)
+    public function edit(User $user)
     {
-        $user = User::find($id);
+        // $user = User::find($id);
 
         if ($user == null) {
             $message = 'user not found.';
@@ -99,8 +139,11 @@ class UserController extends Controller
 
             return redirect()->route('users.index');
         }
-
-        return view('users.edit', compact('user'));
+        $page_title = __('manage.edit') . __('users.page_title');
+        return view('users.form', compact(
+            'user',
+            'page_title'
+        ));
     }
 
     public function update(Request $request, $id)
@@ -158,6 +201,20 @@ class UserController extends Controller
         }
 
         return view('users.view', compact('user'));
+    }
+
+    //TODO
+    public function show(User $user)
+    {
+        if ($user == null) {
+            $message = 'user not found.';
+            Session::flash('error', $message);
+
+            return redirect()->route('users.index');
+        }
+        $page_title = 'TODO';
+        $view = true;
+        return view('users.form', compact('user', 'view'));
     }
 
     public function destroy(Request $request, $id)
