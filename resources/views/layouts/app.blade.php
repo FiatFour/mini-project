@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-    <title>Dashmix - Bootstrap 5 Admin Template &amp; UI Framework</title>
+    <title>{{ config('app.name') }}</title>
 
     <meta name="description"
         content="Dashmix - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave and published on Themeforest">
@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" id="css-main" href="{{ asset('assets/css/dashmix.min.css') }}">
 
+    @stack('custom_styles')
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/xwork.min.css"> -->
     <!-- END Stylesheets -->
@@ -695,6 +696,7 @@
       webpack is putting everything together at assets/_js/main/app.js
     -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script src="{{ asset('assets/js/dashmix.app.min.js') }}"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script> --}}
@@ -725,6 +727,7 @@
             }
         });
     </script>
+    @stack('scripts')
     @yield('customJs')
 </body>
 
