@@ -15,34 +15,42 @@
             <form id="userForm">
                 <div class="row mb-4">
                     <div class="col-6">
-                        <x-forms.input id="username" :value="$user->username" :label="__('users.username')" :optionals="['placeholder' => 'กรอกข้อมูล']" />
+                        <x-forms.input id="username" :value="$user->username" :label="__('users.username')" :optionals="['placeholder' => 'กรอกข้อมูลชื่อผู้ใช้']" />
                         {{-- <label class="form-label" for="username">{{ __('users.username') }}</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Text Input"
                             value="{{ $user->username }}"> --}}
                     </div>
                     <div class="col-6">
-                        <label class="form-label" for="name">{{ __('users.name') }}</label>
+                        <x-forms.input id="name" :value="$user->name" :label="__('users.name')" :optionals="['placeholder' => 'กรอกชื่อ-นามสกุล']" />
+
+                        {{-- <label class="form-label" for="name">{{ __('users.name') }}</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Text Input"
-                            value="{{ $user->name }}">
+                            value="{{ $user->name }}"> --}}
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-6">
-                        <label class="form-label" for="email">{{ __('users.email') }}</label>
+                        <x-forms.input id="email" :value="$user->email" :label="__('users.email')" :optionals="['placeholder' => 'กรอก Email', 'type' => 'email']" />
+
+                        {{-- <label class="form-label" for="email">{{ __('users.email') }}</label>
                         <input type="text" class="form-control" id="email" name="email" placeholder="Text Input"
-                            value="{{ $user->email }}">
+                            value="{{ $user->email }}"> --}}
                     </div>
                     <div class="col-6">
-                        <label class="form-label" for="password">{{ __('users.password') }}</label>
+                        <x-forms.input id="password" :value="$user->password" :label="__('users.password')" :optionals="['placeholder' => 'กรอก Password', 'type' => 'password']" />
+
+                        {{-- <label class="form-label" for="password">{{ __('users.password') }}</label>
                         <input type="password" class="form-control" id="password" name="password"
-                            placeholder="Password Input">
+                            placeholder="Password Input"> --}}
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-6">
-                        <label class="form-label" for="phone">{{ __('users.phone') }}</label>
+                        <x-forms.input id="phone" :value="$user->phone" :label="__('users.phone')" :optionals="['placeholder' => 'กรอกเบอร์โทร']" />
+
+                        {{-- <label class="form-label" for="phone">{{ __('users.phone') }}</label>
                         <input type="text" class="form-control" id="phone" name="phone" placeholder="Text Input"
-                            value="{{ $user->phone }}" maxlength="10">
+                            value="{{ $user->phone }}" maxlength="10"> --}}
                     </div>
                 </div>
                 <div class="row">
@@ -91,18 +99,19 @@
                         }
                     });
                 } else {
-                    Swal.fire({
-                        title: "เกิดข้อผิดพลาด",
-                        text: response.data.message,
-                        icon: "error",
-                        showCancelButton: false,
-                        confirmButtonColor: "btn btn-danger",
-                        confirmButtonText: "ตกลง"
-                    }).then(value => {
-                        if (value) {
-                            //
-                        }
-                    });
+                    if (response.data.errors) {
+                        var errors = response.data.errors;
+
+                        $('.error').removeClass('invalid-feedback').html('');
+                        $("input[type='text'], select").removeClass('is-invalid');
+
+                        $.each(errors, function(key, value) {
+                            $(`#${key}`).addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('invalid-feedback')
+                                .html(value);
+                        });
+                    }
                 }
             }).catch(error => {
                 Swal.fire({

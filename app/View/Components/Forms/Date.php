@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Input extends Component
+class Date extends Component
 {
     /**
      * Create a new component instance.
@@ -27,8 +27,7 @@ class Input extends Component
         $this->label_class = (isset($optionals['label_class']) ? $optionals['label_class'] : 'text-start col-form-label');
         $this->input_class = (isset($optionals['input_class']) ? $optionals['input_class'] : 'col-sm-4');
         $this->type = (isset($optionals['type']) ? $optionals['type'] : 'text');
-        $this->placeholder = (isset($optionals['placeholder']) ? $optionals['placeholder'] : 'Text Input');
-        // dd($optionals['type']);
+        $this->placeholder = (isset($optionals['placeholder']) ? $optionals['placeholder'] : 'Y-m-d');
     }
 
     /**
@@ -36,6 +35,6 @@ class Input extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forms.input');
+        return view('components.forms.date');
     }
 }

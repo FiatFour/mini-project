@@ -46,15 +46,20 @@ Route::middleware([
 
     //TODO
     Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::resource('categories', App\Http\Controllers\CategoryController::class);
+    Route::resource('products', App\Http\Controllers\ProductController::class);
+    Route::resource('orders', App\Http\Controllers\OrderController::class);
+    Route::get('/getProduct',[\App\Http\Controllers\OrderController::class, 'getProduct'])->name('orders.getProduct');
+    Route::post('/orders/add-order-detail',[\App\Http\Controllers\OrderController::class, 'addOrderDetail'])->name('orders.addOrderDetail');
+    Route::post('/orders/update-order-detail', 'OrderController@updateOrderDetail')->name('orders.updateOrderDetail');
+    // Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
+    //     Route::get('/categories', 'index')->name('categories.index');
+    //     Route::get('/categories/create', 'create')->name('categories.create');
+    //     Route::post('/categories', 'store')->name('categories.store');
 
-    Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
-        Route::get('/categories', 'index')->name('categories.index');
-        Route::get('/categories/create', 'create')->name('categories.create');
-        Route::post('/categories', 'store')->name('categories.store');
-
-        Route::get('/categories/edit/{id}', 'edit')->name('categories.edit');
-        Route::get('/categories/view/{id}', 'view')->name('categories.view');
-        Route::put('/categories/{id}', 'update')->name('categories.update');
-        Route::delete('/categories/{id}', 'destroy')->name('categories.delete');
-    });
+    //     Route::get('/categories/edit/{id}', 'edit')->name('categories.edit');
+    //     Route::get('/categories/view/{id}', 'view')->name('categories.view');
+    //     Route::put('/categories/{id}', 'update')->name('categories.update');
+    //     Route::delete('/categories/{id}', 'destroy')->name('categories.delete');
+    // });
 });

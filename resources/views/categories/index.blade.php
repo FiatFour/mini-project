@@ -11,23 +11,26 @@
             <form action="" method="GET">
                 <div class="row mb-4">
                     <div class="col-3">
-                        <label class="form-label" for="keyword">คำค้นหา</label>
-                        <input type="text" class="form-control" placeholder="Input Text" name="keyword" id="keyword">
+                        {{-- <label class="form-label" for="keyword">คำค้นหา</label>
+                        <input type="text" class="form-control" placeholder="Input Text" name="keyword" id="keyword"> --}}
+                        <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'" :optionals="['placeholder' => 'ใส่คำค้นหา']" />
                     </div>
                     <div class="col-3">
-                        <label class="form-label" for="code">รหัส{{ __('categories.page_title') }}</label>
+                        {{-- <label class="form-label" for="code">รหัส{{ __('categories.page_title') }}</label>
                         <select class="js-select2 form-select" id="code" name="code" style="width: 100%;"
                             data-placeholder="Choose one..">
                             <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
                             @if ($categories2->isNotEmpty())
                                 @foreach ($categories2 as $category)
-                                    <option {{ $code == $category->code ? 'selected' : '' }} value="{{ $category->code }}">{{ $category->code }}</option>
+                                    <option {{ $code == $cat egory->code ? 'selected' : '' }} value="{{ $category->code }}">{{ $category->code }}</option>
                                 @endforeach
                             @endif
-                        </select>
+                        </select> --}}
+                        <x-forms.select id="code" :name="'code'" :items="$categories2" :selected="$code"
+                            :label="'รหัส' . __('categories.page_title')" :optionals="['placeholder' => 'เลือก..']" />
                     </div>
                     <div class="col-3">
-                        <label class="form-label" for="name">ชื่อ{{ __('categories.page_title') }}</label>
+                        {{-- <label class="form-label" for="name">ชื่อ{{ __('categories.page_title') }}</label>
                         <select class="js-select2 form-select" id="name" name="name" style="width: 100%;"
                             data-placeholder="Choose one..">
                             <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
@@ -36,15 +39,25 @@
                                     <option {{ $code == $category->name ? 'selected' : '' }} value="{{ $category->name }}">{{ $category->name }}</option>
                                 @endforeach
                             @endif
-                        </select>
+                        </select> --}}
+
+                        <x-forms.select id="name" :name="'name'" :items="$categories2" :selected="$name"
+                            :label="'ชื่อ' . __('categories.page_title')" :optionals="['placeholder' => 'เลือก..']" />
                     </div>
                     <div class="col-3">
-                        <label class="form-label" for="status">สถานะ</label>
+                        {{-- {{ dd($status_array) }} --}}
+                        {{-- <x-forms.select_status id="status" :selected="$status" :label="'สถานะ' . __('categories.page_title')"
+                        :optionals="['placeholder' => 'เลือก..']" /> --}}
+                        {{-- <x-forms.select-status id="status" :selected="$status" :label="'เลือก' . __('categories.page_title')" :optionals="['form_label' => 'text-start col-form-label']"/> --}}
+                        <x-forms.select id="status" :name="'name'" :items="$status_obj" :selected="$status"
+                            :label="'เลือก' . __('categories.page_title')" :optionals="['form_label' => 'text-start col-form-label']" />
+
+                        {{-- <label class="text-start col-form-label" for="status">สถานะ</label>
                         <select class="form-select" id="status" name="status">
                             <option value="">เลือกสถานะ</option>
-                            <option value="1">ใช้งาน</option>
-                            <option value="0">ไม่ใช้งาน</option>
-                        </select>
+                            <option {{ $status == 'yes' ? 'selected' : '' }} value="yes">ใช้งาน</option>
+                            <option {{ $status == 'no' ? 'selected' : '' }} value="no">ไม่ใช้งาน</option>
+                        </select> --}}
                     </div>
                 </div>
                 <div class="d-flex flex-row d-flex justify-content-end">
@@ -56,38 +69,11 @@
         </div>
 
 
-
-        {{-- <form action="" method="GET">
-            <div class="card-header">
-                <div class="card-title">
-                </div>
-
-                <div class="card-tools">
-                    <div class="input-group input-group" style="width: 250px;">
-                        <input value="{{ Request::get('keyword') }}" type="text" name="keyword"
-                            class="form-control float-right" placeholder="Search">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </form> --}}
-
-
-        {{-- <button class="input-group-text border-0 bg-body">
-            <i class="fa fa-fw fa-search"></i>
-        </button> --}}
-        <!-- END Search -->
-
-        <!-- All Customer -->
+        <!-- All Category -->
         <div class="block block-rounded">
 
             <div class="block-content">
-                <!-- All Customer Table -->
+                <!-- All Category Table -->
                 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                     <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3"></h1>
                     <a href="{{ route('categories.create') }}" type="button" class="btn btn-alt-primary my-2">
@@ -109,7 +95,8 @@
                             @if ($categories->isNotEmpty())
                                 @foreach ($categories as $category)
                                     <tr>
-                                        <td class="d-none d-sm-table-cell text-center">{{ $categories->firstItem() + $loop->index }}</td>
+                                        <td class="d-none d-sm-table-cell text-center">
+                                            {{ $categories->firstItem() + $loop->index }}</td>
                                         <td class="fw-semibold">
                                             <a href="javascript:void(0)">{{ $category->code }}</a>
                                         </td>
@@ -117,7 +104,7 @@
                                             {{ $category->name }}
                                         </td>
                                         <td class="d-none d-sm-table-cell">
-                                            @if ($category->status == 1)
+                                            @if ($category->status == 'yes')
                                                 ใช้งาน
                                             @else
                                                 ไม่ได้ใช้งาน
@@ -131,12 +118,13 @@
                                                         aria-expanded="false">
                                                         <i class="fa fa-ellipsis-v"></i>
                                                     </button>
+                                                    {{-- TODO --}}
                                                     <div class="dropdown-menu dropdown-menu-end">
-                                                        <a href="{{ route('categories.view', $category->id) }}"
+                                                        <a href="{{ route('categories.show', ['category' => $category]) }}"
                                                             class="dropdown-item" href="javascript:void(0)">
                                                             <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
                                                         </a>
-                                                        <a href="{{ route('categories.edit', $category->id) }}"
+                                                        <a href="{{ route('categories.edit', ['category' => $category]) }}"
                                                             class="dropdown-item" href="javascript:void(0)">
                                                             <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
                                                         </a>
@@ -147,21 +135,21 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </td>
                                     </tr>
                                 @endforeach
                             @endif
                         </tbody>
                     </table>
-                    <div class="d-flex flex-row d-flex justify-content-end">
-                        {{ $categories->links() }}
-                    </div>
-
                 </div>
-                <!-- END All Customer Table -->
+                <div class="d-flex flex-row d-flex justify-content-end">
+                    {{ $categories->links() }}
+                </div>
+
 
                 <!-- Pagination -->
-                <nav aria-label="Photos Search Navigation">
+                {{-- <nav aria-label="Photos Search Navigation">
                     <ul class="pagination justify-content-end mt-2">
                         <li class="page-item">
                             <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-label="Previous">
@@ -186,23 +174,84 @@
                             </a>
                         </li>
                     </ul>
-                </nav>
+                </nav> --}}
                 <!-- END Pagination -->
             </div>
         </div>
-        <!-- Results -->
-        <!-- END Results -->
     </div>
 @endsection
 
 
-@section('customJs')
+@push('scripts')
+    <script>
+        function deleteRecord(id) {
+            var url = "{{ route('categories.destroy', 'ID') }}"
+            var newUrl = url.replace('ID', id)
+            Swal.fire({
+                title: "ยืนยันลบข้อมูล",
+                text: "ต้องการลบข้อมูลใช่หรือไม่?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#767E88",
+                cancelButtonText: "ยกเลิก",
+                confirmButtonText: "ยืนยัน"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(newUrl).then(response => {
+                        if (response.data.success) {
+                            Swal.fire({
+                                title: "สำเร็จ",
+                                text: "{{ __('manage.store_success_message') }}",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonColor: "btn btn-success",
+                                confirmButtonText: "ตกลง"
+                            }).then(value => {
+                                if (response.data.redirect) {
+                                    window.location.href = response.data.redirect;
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "เกิดข้อผิดพลาด",
+                                text: response.data.message,
+                                icon: "error",
+                                showCancelButton: false,
+                                confirmButtonColor: "btn btn-danger",
+                                confirmButtonText: "ตกลง"
+                            }).then(value => {
+                                if (value) {
+                                    //
+                                }
+                            });
+                        }
+                    }).catch(error => {
+                        Swal.fire({
+                            title: "เกิดข้อผิดพลาดaa",
+                            text: response.data.message,
+                            icon: "error",
+                            showCancelButton: false,
+                            confirmButtonColor: "btn btn-danger",
+                            confirmButtonText: "ตกลง"
+                        }).then(value => {
+                            if (value) {
+                                //
+                            }
+                        });
+                    });
+                }
+            });
+        }
+    </script>
+@endpush
 
-@include('layouts.message')
+{{-- @section('customJs')
+    @include('layouts.message')
 
     <script>
         function deleteRecord(id) {
-            var url = "{{ route('categories.delete', 'ID') }}"
+            var url = "{{ route('categories.destroy', 'ID') }}"
             var newUrl = url.replace('ID', id)
             Swal.fire({
                 title: "ยืนยันลบข้อมูล",
@@ -234,4 +283,4 @@
 
         }
     </script>
-@endsection
+@endsection --}}

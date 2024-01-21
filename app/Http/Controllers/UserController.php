@@ -32,16 +32,6 @@ class UserController extends Controller
             })
             ->paginate(2);
 
-        // if ( !empty($request->get('keyword')) || !empty($request->get('username')) || !empty($request->get('name'))) {
-        // dd($request->get('keyword'), $request->get('username'), $request->get('name'));
-        // $users = $users->Where('username', 'like', '%' . $request->get('keyword') . '%');
-        // $users = $users->orWhere('name', 'like', '%' . $request->get('keyword') . '%');
-        // $users = $users->orWhere('email', 'like', '%' . $request->get('keyword') . '%');
-        // $users = $users->Where('username', $request->get('username'));
-        // $users = $users->Where('name', $request->get('name'));
-        // dd($users);
-        // }
-
         $users2 = User::all();
 
         return view(
@@ -76,7 +66,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required',
+            'username' =>  $request->id == null ? 'required|unique:users' : 'required',
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
@@ -86,7 +76,8 @@ class UserController extends Controller
         if ($validator->stopOnFirstFailure()->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->getMessageBag()->first()
+                'errors' => $validator->errors(),
+                'message' => $validator->getMessageBag()->first(),
             ]);
         }
         //TODO
@@ -104,28 +95,6 @@ class UserController extends Controller
                 'success' => true,
                 'redirect' => route('users.index'),
             ]);
-        } else {
-            if ($validator->passes()) {
-                $user = new User();
-                $user->username = $request->username;
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->password = Hash::make($request->password);
-                $user->phone = $request->phone;
-                $user->save();
-
-                $message = 'User added successfully.';
-                Session::flash('success', $message);
-                return response()->json([
-                    'status' => true,
-                    'message' => $message
-                ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'errors' => $validator->errors()
-                ]);
-            }
         }
     }
 
@@ -144,63 +113,6 @@ class UserController extends Controller
             'user',
             'page_title'
         ));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $user = User::find($id);
-        if (empty($user)) {
-            Session::flash('error', 'User not found');
-            return response()->json([
-                'status' => false,
-                'notFound' => true,
-                'message' => 'User not found'
-            ]);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'phone' => 'required|numeric',
-        ]);
-
-        if ($validator->passes()) {
-            $user->username = $request->username;
-            $user->name = $request->name;
-            $user->email = $request->email;
-            if (!empty($request->password)) {
-                $user->password = Hash::make($request->password);
-            }
-            $user->phone = $request->phone;
-            $user->save();
-
-            Session::flash('success', 'User updated successfully');
-            return response()->json([
-                'status' => true,
-                'message' => 'User updated successfully',
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'errors' => $validator->errors()
-            ]);
-        }
-    }
-
-    public function view(Request $request, $id)
-    {
-        $user = User::find($id);
-
-        if ($user == null) {
-            $message = 'user not found.';
-            Session::flash('error', $message);
-
-            return redirect()->route('users.index');
-        }
-
-        return view('users.view', compact('user'));
     }
 
     //TODO
@@ -224,7 +136,7 @@ class UserController extends Controller
         if (empty($user)) {
             Session::flash('error', 'User not found');
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'User not found'
             ]);
         }
@@ -233,8 +145,9 @@ class UserController extends Controller
 
         Session::flash('deleted', 'User deleted successfully');
         return response()->json([
-            'status' => true,
-            'message' => 'User deleted successfully'
+            'success' => true,
+            'message' => 'User deleted successfully',
+            'redirect' => route('users.index')
         ]);
     }
 }
