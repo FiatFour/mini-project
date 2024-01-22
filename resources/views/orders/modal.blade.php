@@ -126,8 +126,8 @@
                     categoryName: categoryName,
                     price: price,
                     amount: amount,
-                    sub_total: price*amount,
-                    total: (price*amount)*(100/107)
+                    sub_total: (price*amount)*(100/107),
+                    total: price*amount
                 };
 
                 if(selectedOrderDetailIndex != null){
@@ -136,6 +136,7 @@
                     // เพิ่มข้อมูลลง Array และรีเฟรชตาราง
                     addOrderDetail(data);
                 }
+
                 // รีเซ็ตค่าใน Modal
                 $('#productName').val('').trigger('change');
                 $('#categoryName').val('').trigger('change');
