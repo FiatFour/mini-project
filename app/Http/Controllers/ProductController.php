@@ -132,7 +132,7 @@ class ProductController extends Controller
 
         $categories = Category::select('name', 'id', 'name AS categoryName', 'id AS categoryId')->orderBy('categoryName', 'ASC')->get();
 
-        $page_title = 'TODO';
+        $page_title =  __('manage.view') . __('products.page_title');
         $view = true;
         return view('products.form', compact('product', 'view', 'categories'));
     }

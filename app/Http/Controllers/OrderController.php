@@ -149,9 +149,26 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Order $order)
     {
-        //
+        if ($order == null) {
+            $message = 'order not found.';
+            Session::flash('error', $message);
+
+            return redirect()->route('orders.index');
+        }
+        $orderDetailsWithRelations = OrderDetail::select('order_details.*', 'products.name AS productName', 'products.price', 'categories.name AS categoryName')
+            ->latest('order_details.id')
+            ->leftJoin('products', 'products.id',
+                'order_details.product_id')
+            ->leftJoin('categories', 'categories.id',
+                'order_details.category_id')
+            ->where('order_details.order_id', $order->id)
+            ->paginate(10);
+
+        $page_title = __('manage.edit') . __('orders.page_title');
+        $view = true;
+        return view('orders.form', compact('order', 'page_title', 'orderDetailsWithRelations', 'view'));
     }
 
     /**
@@ -187,7 +204,18 @@ class OrderController extends Controller
 
 
         $page_title = __('manage.edit') . __('orders.page_title');
-        return view('orders.form', compact('order', 'page_title', 'orderDetailsWithRelations'));
+        $edit = true;
+
+        $products = Product::select('products.*', 'categories.name AS categoryName')
+            ->latest('products.id')
+            ->leftJoin(
+                'categories', 'categories.id',
+                'products.category_id'
+            )
+            ->paginate(5);
+
+        $products2 = Product::all();
+        return view('orders.form', compact('order', 'page_title', 'orderDetailsWithRelations', 'edit', 'products', 'products2'));
     }
 
     /**
@@ -201,8 +229,25 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $order = Order::find($id);
+
+        if (empty($order)) {
+            Session::flash('error', 'Order not found');
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found'
+            ]);
+        }
+
+        $order->delete();
+
+        Session::flash('success', 'Order deleted successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Order deleted successfully',
+            'redirect' => route('orders.index')
+        ]);
     }
 }

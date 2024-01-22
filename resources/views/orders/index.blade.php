@@ -48,6 +48,7 @@
                         <a href="{{ route('orders.create') }}" type="button" class="btn btn-alt-primary my-2">
                             <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
                         </a>
+                    </a>
                 </div>
 
                 <div class="table-responsive">
@@ -96,15 +97,15 @@
                                                     {{-- TODO --}}
                                                     <div class="dropdown-menu dropdown-menu-end">
                                                         <a href="{{ route('orders.show', ['order' => $order]) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
+                                                            class="dropdown-item">
                                                             <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
                                                         </a>
                                                         <a href="{{ route('orders.edit', ['order' => $order]) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
+                                                            class="dropdown-item">
                                                             <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
                                                         </a>
-                                                        <a class="dropdown-item" href="#"
-                                                            onclick="deleteRecord({{ $order->id }})">
+                                                        <a class="dropdown-item"  href="javascript:void(0)"
+                                                           onclick="deleteRecord('{{ $order->id }}')">
                                                             <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ
                                                         </a>
                                                     </div>
@@ -133,6 +134,7 @@
 @push('scripts')
     <script>
         function deleteRecord(id) {
+            console.log(id);
             var url = "{{ route('orders.destroy', 'ID') }}"
             var newUrl = url.replace('ID', id)
             Swal.fire({

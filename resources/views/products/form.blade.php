@@ -39,10 +39,8 @@
                     <div class="col-12 text-end">
                         <a href="{{ route('products.index') }}"
                             class="btn btn-secondary btn-custom-size me-2">{{ __('manage.back') }}</a>
-                        @if (!isset($view))
                             <button type="button"
                                 class="btn btn-primary btn-custom-size btn-save-form">{{ __('manage.save') }}</button>
-                        @endif
                     </div>
                 </div>
             </form>

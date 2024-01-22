@@ -86,11 +86,11 @@
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-end">
                                                         <a href="{{ route('products.show', ['product' => $product]) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
+                                                            class="dropdown-item">
                                                             <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
                                                         </a>
                                                         <a href="{{ route('products.edit', ['product' => $product]) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
+                                                            class="dropdown-item">
                                                             <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
                                                         </a>
                                                         <a class="dropdown-item" href="#"
