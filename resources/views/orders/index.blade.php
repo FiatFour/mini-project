@@ -14,17 +14,6 @@
                     <div class="col-3">
                         <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'" :optionals="['placeholder' => 'ใส่คำค้นหา']" />
                     </div>
-                    {{-- <div class="col-3">
-                        <x-forms.select id="name" :name="'name'" :items="$orders2" :selected="$name"
-                            :label="'ชื่อ' . __('products.page_title')" :optionals="['placeholder' => 'เลือก..']" />
-                    </div> --}}
-                    {{-- <div class="col-3">
-                        <x-forms.select id="categoryId" :name="'categoryName'" :items="$categories" :selected="$categoryId"
-                            :label="'ชื่อ' . __('categories.page_title')" :optionals="['placeholder' => 'เลือก..']" />
-                    </div>
-                    <div class="col-3">
-                        <x-forms.input id="exp_date" :value="$exp_date" :label="'วันหมดอายุ'" :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d']" />
-                    </div> --}}
                 </div>
                 <div class="d-flex flex-row d-flex justify-content-end">
                     <a href="{{ route('products.index') }}" class="btn btn-secondary"

@@ -12,7 +12,6 @@
                     </div>
                 </div>
                 <div class="block-content">
-                    <form action="" method="POST" id="orderForm" name="orderForm">
                         <div class="row mb-4">
                             <div class="col-6">
                                 <label class="text-start col-form-label"
@@ -62,7 +61,6 @@
                                 <p></p>
                             </div>
                         </div>
-                    </form>
                 </div>
             </div>
             <div class="block-content block-content-full text-end bg-body">
@@ -76,19 +74,16 @@
 
 @push('scripts')
     <script>
-        $("#productName").change(function () {
+        $("#productName").on('change', function(){
             var productName = $('#productName').val();
-            $.ajax({
-                url: "{{route('orders.getProduct')}}",
-                type: 'get',
-                data: {
+            axios.get("{{ route('orders.getProduct') }}", {
+                params: {
                     productName: productName
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (response['success'] === true) {
-                        var categoryName = response['categoryName'];
-                        var price = response['price'];
+                }
+            }).then(function (response) {
+                    if (response.data.success === true) {
+                        var categoryName = response.data.categoryName;
+                        var price = response.data.price;
 
                         // Clear existing options
                         $('#categoryName').empty();
@@ -108,8 +103,10 @@
                         $('#categoryName').trigger('change');
                         $('#price').trigger('change');
                     }
-                }
-            });
+                })
+                .catch(function (error) {
+                    console.error('Error fetching product data:', error);
+                });
         });
 
         // เมื่อคลิกปุ่มบันทึกใน Modal
@@ -121,18 +118,21 @@
 
             // ตรวจสอบว่าข้อมูลไม่ว่างเปล่า
             if (productName && categoryName && price && amount) {
+
                 var data = {
                     productName: productName,
                     categoryName: categoryName,
                     price: price,
                     amount: amount,
-                    sub_total: (price*amount)*(100/107),
-                    total: price*amount
+                    sub_total: (price * amount) * (100 / 107),
+                    total: price * amount
                 };
 
-                if(selectedOrderDetailIndex != null){
+                console.log(data);
+                console.log(selectedOrderDetailIndex);
+                if (selectedOrderDetailIndex !== null) {
                     updateOrderDetail();
-                }else{
+                } else {
                     // เพิ่มข้อมูลลง Array และรีเฟรชตาราง
                     addOrderDetail(data);
                 }
@@ -164,8 +164,8 @@
                 categoryName: categoryName,
                 price: price,
                 amount: amount,
-                sub_total: price * amount,
-                total: (price * amount) * (100 / 7)
+                sub_total: (price * amount) * (100 / 7),
+                total: price * amount
             };
 
             // Refresh the table with the updated data

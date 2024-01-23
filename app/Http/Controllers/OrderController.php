@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -18,13 +19,14 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->keyword;
-        $name = $request->name;
-        $exp_date = $request->exp_date;
-        $categoryId = $request->categoryId;
-        $orders = Order::select('*')->paginate(5);
+//        $orders = Order::select('*')->paginate(5);
+
+        $orders = Order::select('*')
+            ->search($request)
+            ->paginate(5);
 
 //        dd($orders);
-        return view('orders.index', compact('orders', 'keyword', 'name', 'exp_date', 'categoryId'));
+        return view('orders.index', compact('orders', 'keyword'));
     }
 
     /**
@@ -73,29 +75,33 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $formData = json_decode($request->getContent(), true);
 
-//        $validator = Validator::make($formData['orderForm'], [
-//            'order_name' => 'required',
-//            'order_phone' => 'required|numeric',
-//            'order_address' => 'required',
-//            'order_date' => 'required',
-//            'shipping_date' => 'required',
-//        ], [
-//            'order_name.required' => 'The order name field is required.',
-//            'order_phone.required' => 'The order phone field is required.',
-//            'order_phone.numeric' => 'The order phone must be a number.',
-//            'order_address.required' => 'The order address field is required.',
-//            'order_date.required' => 'The order date field is required.',
-//            'shipping_date.required' => 'The shipping date field is required.',
-//        ]);
+        dd($request->all());
 
-//        if ($validator->fails()) {
-//            return response()->json([
-//                'success' => false,
-//                'errors' => $validator->errors(),
-//            ]);
-//        }
+        $validator = Validator::make($request->all(), [
+            'order_name' => 'required',
+            'order_phone' => 'required|numeric',
+            'order_address' => 'required',
+            'order_date' => 'required',
+            'shipping_date' => 'required',
+        ], [
+            'order_name.required' => 'The order name field is required.',
+            'order_phone.required' => 'The order phone field is required.',
+            'order_phone.numeric' => 'The order phone must be a number.',
+            'order_address.required' => 'The order address field is required.',
+            'order_date.required' => 'The order date field is required.',
+            'shipping_date.required' => 'The shipping date field is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        if ($request->test_form) {
+
             $orderDetails = $formData['orderDetails'];
             $order = $formData['orderForm'];
 
@@ -105,7 +111,7 @@ class OrderController extends Controller
             $orderDate = $order[3]['value'];
             $orderShippingDate = $order[4]['value'];
 
-            $order = new Order();
+            $order = Order::firstOrNew(['id' => $request->order_id]);
             $order->name = $orderName;
             $order->phone = $orderPhone;
             $order->address = $orderAddress;
@@ -120,7 +126,7 @@ class OrderController extends Controller
             foreach ($orderDetails as $orderDetail) {
                 $product = Product::select('*')->where('name', $orderDetail['productName'])->first();
 
-                $ord = new OrderDetail();
+                $ord = OrderDetail::firstOrNew(['order_id' => $request->order_id]);
                 $ord->order_id = $order->id;
                 $ord->product_id = $product->id;
                 $ord->category_id = $product->category_id;
@@ -143,6 +149,7 @@ class OrderController extends Controller
                 'success' => true,
                 'redirect' => route('orders.index'),
             ]);
+        }
 
     }
 
@@ -197,11 +204,9 @@ class OrderController extends Controller
             ->leftJoin('categories', 'categories.id',
                 'order_details.category_id')
             ->where('order_details.order_id', $order->id)
-            ->paginate(10);
-
-
+//            ->paginate(10);
+            ->get();
 //        dd($orderDetailsWithRelations);
-
 
         $page_title = __('manage.edit') . __('orders.page_title');
         $edit = true;

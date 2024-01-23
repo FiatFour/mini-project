@@ -18,4 +18,16 @@ class Order extends Model
         'order_date',
         'shipping_date',
     ];
+
+    public function scopeSearch($query, $request)
+    {
+        return $query->where(
+            function ($search) use ($request) {
+                if (!empty($request->keyword)) {
+                    $keyword = $request->keyword;
+                    $search->where('orders.name', 'like', '%' . $keyword . '%');
+                }
+            }
+        );
+    }
 }

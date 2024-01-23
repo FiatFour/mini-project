@@ -19,7 +19,8 @@
                         <label class="text-start col-form-label" for="shop_code">
                             {{'รหัส' . __('orders.shop')}}
                         </label>
-                        <input disabled type="text" class="form-control col-sm-4" placeholder="กรอกข้อมูลร้านค้า" value="{{isset($order) ? $order->id : ' '}}">
+                        <input disabled type="text" class="form-control col-sm-4" placeholder="กรอกข้อมูลร้านค้า"
+                               value="{{isset($order) ? $order->id : ' '}}">
                         <p></p>
                     </div>
 
@@ -60,139 +61,150 @@
                     </div>
                 </div>
             </div>
-        </form>
 
-        <div class="block block-rounded">
-            <div class="block-content">
-                <!-- All Category Table -->
-                @if (!isset($view))
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">ข้อมูลสินค้า</h1>
-                        <a href="#" type="button" class="btn btn-alt-primary my-2" data-bs-toggle="modal"
-                           data-bs-target="#modal-block-popout">
-                            <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
-                        </a>
-                        @include('orders.modal')
-                    </div>
-                @endif
+            <div class="block block-rounded">
+                <div class="block-content">
+                    <!-- All Category Table -->
+                    @if (!isset($view))
+                        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">ข้อมูลสินค้า</h1>
+                            <a href="#" type="button" class="btn btn-alt-primary my-2" data-bs-toggle="modal"
+                               data-bs-target="#modal-block-popout">
+                                <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
+                            </a>
+                            @include('orders.modal')
+                        </div>
+                    @endif
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-borderless table-vcenter">
-                        <thead>
-                        <tr class="bg-body-dark">
-                            <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
-                            <th>ชื่อ{{ __('products.page_title') }}</th>
-                            <th>{{ __('categories.page_title') }}</th>
-                            <th>ราคาขาย</th>
-                            <th>จำนวน</th>
-                            <th>ราคา (ไม่รวม VAT)</th>
-                            <th>ราคาสุทธิ (รวม VAT)</th>
-                            <th class="text-center">เครื่องมือ</th>
-                        </tr>
-                        </thead>
-                        <tbody id="orderDetailsTableBody">
-                        @if (isset($edit) || isset($view))
-                            @if ($orderDetailsWithRelations->isNotEmpty())
-                                @foreach ($orderDetailsWithRelations as $orderDetailsWithRelation)
-                                    <tr>
-                                        <td class="d-none d-sm-table-cell text-center">
-                                            {{ $orderDetailsWithRelations->firstItem() + $loop->index }}</td>
-                                        <td class="fw-semibold">
-                                            <a href="javascript:void(0)">{{ $orderDetailsWithRelation->productName }}</a>
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $orderDetailsWithRelation->categoryName }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ number_format($orderDetailsWithRelation->price, 2) }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $orderDetailsWithRelation->amount }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ number_format($orderDetailsWithRelation->sub_total, 2) }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ number_format($orderDetailsWithRelation->total, 2) }}
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="block-options">
-                                                <div class="dropdown">
-                                                    <button type="button" class="btn-block-option"
-                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                        <i class="fa fa-ellipsis-v"></i>
-                                                    </button>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-borderless table-vcenter">
+                            <thead>
+                            <tr class="bg-body-dark">
+                                <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
+                                <th>ชื่อ{{ __('products.page_title') }}</th>
+                                <th>{{ __('categories.page_title') }}</th>
+                                <th>ราคาขาย</th>
+                                <th>จำนวน</th>
+                                <th>ราคา (ไม่รวม VAT)</th>
+                                <th>ราคาสุทธิ (รวม VAT)</th>
+                                <th class="text-center">เครื่องมือ</th>
+                            </tr>
+                            </thead>
+                            <tbody id="orderDetailsTableBody">
+                            @if (isset($edit) || isset($view))
+                                @if (sizeof($orderDetailsWithRelations) > 0 )
+                                    @foreach ($orderDetailsWithRelations as $index => $orderDetailsWithRelation)
+                                        <tr>
+                                            <td class="d-none d-sm-table-cell text-center">
+                                                {{ $index + 1 }}</td>
+                                            <td class="fw-semibold">
+                                                <a href="javascript:void(0)">{{ $orderDetailsWithRelation->productName }}</a>
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                {{ $orderDetailsWithRelation->categoryName }}
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                {{ number_format($orderDetailsWithRelation->price, 2) }}
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                {{ $orderDetailsWithRelation->amount }}
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                {{ number_format($orderDetailsWithRelation->sub_total, 2) }}
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                {{ number_format($orderDetailsWithRelation->total, 2) }}
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="block-options">
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn-block-option"
+                                                                data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="{{ route('orders.show', ['order' => $order]) }}"
+                                                               class="dropdown-item">
+                                                                <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
+                                                            </a>
+                                                            <a onclick="editOrderDetail({{$index}})"
+                                                               class="dropdown-item">
+                                                                <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
+                                                            </a>
+                                                            <a class="dropdown-item" href="#"
+                                                               onclick="deleteRecord({{ $order->id }})">
+                                                                <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             @endif
-                            <div class="d-flex flex-row d-flex justify-content-end">
-                                {{ $orderDetailsWithRelations->links() }}
-                            </div>
-                        @endif
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        @if (isset($edit) || isset($view))
-            <div class="p-3 bg-body-extra-light rounded push">
-                <div class="row mb-4">
-                    <div class="col-3">
-                        <label class="text-start col-form-label">
-                            ราคา (ไม่รวม VAT)
-                        </label>
-                        <input disabled type="text" class="form-control col-sm-4" value="{{$order->sub_total}}">
-                    </div>
-                    <div class="col-3">
-                        <label class="text-start col-form-label">
-                            VAT 7%
-                        </label>
-                        <input disabled type="text" class="form-control col-sm-4"
-                               value="{{$order->total - $order->sub_total}}">
-                    </div>
-                    <div class="col-3">
-                        <label class="text-start col-form-label">
-                            จำนวนเงินรวมทั้งสิ้น
-                        </label>
-                        <input disabled type="text" class="form-control col-sm-4" value="{{$order->total}}">
-                    </div>
-                    <div class="col-3">
-                        <label class="text-start col-form-label">
-                            ส่วนลด
-                        </label>
-                        <input type="text" class="form-control col-sm-4" value="" id="discount">
+            @if (isset($edit) || isset($view))
+                <div class="p-3 bg-body-extra-light rounded push">
+                    <div class="row mb-4">
+                        <div class="col-3">
+                            <label class="text-start col-form-label">
+                                ราคา (ไม่รวม VAT)
+                            </label>
+                            <input disabled type="text" class="form-control col-sm-4" value="{{$order->sub_total}}">
+                        </div>
+                        <div class="col-3">
+                            <label class="text-start col-form-label">
+                                VAT 7%
+                            </label>
+                            <input disabled type="text" class="form-control col-sm-4"
+                                   value="{{$order->total - $order->sub_total}}">
+                        </div>
+                        <div class="col-3">
+                            <label class="text-start col-form-label">
+                                จำนวนเงินรวมทั้งสิ้น
+                            </label>
+                            <input disabled type="text" class="form-control col-sm-4" value="{{$order->total}}">
+                        </div>
+                        <div class="col-3">
+                            <label class="text-start col-form-label">
+                                ส่วนลด
+                            </label>
+                            <input type="text" class="form-control col-sm-4" value="" id="discount">
+                        </div>
+
                     </div>
 
+                    <label class="text-start col-form-label">
+                        หักภาษี
+                    </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="taxCheckbox"
+                               name="taxCheckbox">
+                        <label class="form-check-label" for="taxCheckbox">หักภาษี ณ ที่จ่าย 3 %</label>
+                    </div>
                 </div>
+            @endif
 
-                <label class="text-start col-form-label">
-                    หักภาษี
-                </label>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="taxCheckbox"
-                           name="taxCheckbox">
-                    <label class="form-check-label" for="taxCheckbox">หักภาษี ณ ที่จ่าย 3 %</label>
+            <div class="row">
+                <input type="hidden" name="order_id" id="order_id" value="{{ $order->id }}">
+                <div class="col-12 text-end">
+                    <a href="{{ route('orders.index') }}"
+                       class="btn btn-secondary btn-custom-size me-2">{{ __('manage.back') }}</a>
+                    @if (!isset($view))
+                        <button type="button" id="btnOrderSave"
+                                class="btn btn-primary btn-custom-size btn-save-form">{{ __('manage.save') }}</button>
+                    @endif
                 </div>
             </div>
-        @endif
-
-        <div class="row">
-            <input type="hidden" name="id" id="id" value="{{ $order->id }}">
-            <div class="col-12 text-end">
-                <a href="{{ route('orders.index') }}"
-                   class="btn btn-secondary btn-custom-size me-2">{{ __('manage.back') }}</a>
-                @if (!isset($view))
-                    <button type="button" id="btnOrderSave"
-                            class="btn btn-primary btn-custom-size btn-save-form">{{ __('manage.save') }}</button>
-                @endif
-            </div>
-        </div>
+        </form>
 
     </section>
 @endsection
@@ -202,17 +214,18 @@
         {{--('{{count($orderDetailsWithRelations)}}')}--}}
         $view = '{{ isset($view) }}';
         $edit = '{{ isset($edit) }}';
-        if($edit){
-            var orderDetailsWithRelation = [];
-            orderDetailsWithRelation = '{{isset($orderDetailsWithRelations)}}';
-            console.log(orderDetailsWithRelation);
+        var count = 1;
+        if ($edit) {
+            // Convert orderDetailsWithRelations to JavaScript array
+            {{--var orderDetailsWithRelations = {!! json_encode($orderDetailsWithRelations) !!};--}}
 
-            if (orderDetailsWithRelations.length > 0) {
-                // Do something with the data, e.g., pass it to the 'addOrderDetail' function
-                orderDetailsWithRelations.forEach(function (orderDetail) {
-                    addOrderDetail(orderDetail);
-                });
-            }
+            {{--if (Array.isArray(orderDetailsWithRelations)) {--}}
+            {{--    orderDetailsWithRelations.forEach(function (orderDetail) {--}}
+            {{--        addOrderDetail(orderDetail);--}}
+            {{--    });--}}
+            {{--} else {--}}
+            {{--    console.error('Invalid or empty server response for orderDetailsWithRelations');--}}
+            {{--}--}}
         }
         if ($view) {
             $('#order_name').prop('disabled', true);
@@ -241,13 +254,17 @@
         // รีเฟรชตาราง
         function refreshTable() {
             var tableBody = $('#orderDetailsTableBody');
-            tableBody.empty();
+            var count = 1; // Initialize count
+
+            {{--if ($edit) {--}}
+            {{--    count += {{count($orderDetailsWithRelations)}};--}}
+            {{--}--}}
 
             // แสดงข้อมูลในตาราง
             orderDetailsData.forEach(function (orderDetail, index) {
                 var row =
                     `<tr>
-                            <td> ${(index + 1)} </td>
+                            <td> ${(count + index)} </td> // Updated this line
                             <td class="fw-semibold"><a href="javascript:void(0)">${orderDetail.productName}</a></td>
                             <td class="d-none d-sm-table-cell">${orderDetail.categoryName}</td>
                             <td class="d-none d-sm-table-cell">${orderDetail.price}</td>
@@ -287,43 +304,54 @@
             refreshTable();
         }
 
-        $('#btnOrderSave').click(function () {
-            var orderForm = $('#orderForm').serializeArray();
-            $.ajax({
-                url: "{{ route('orders.store') }}",
-                type: 'post',
-                data: JSON.stringify({
-                    orderDetails: orderDetailsData,
-                    orderForm: orderForm,
-                }),
-                dataType: 'json',
-                success: function (response) {
-                    $(".btnOrderSave").prop('disabled', false);
+        $("#btnOrderSave").on("click", function () {
+            console.log('hi');
+            let storeUri = "{{ route('orders.store') }}";
+            var formData = new FormData(document.querySelector('#orderForm'));
+            formData.append('test_form', true);
+            axios.post(storeUri, formData).then(response => {
+                if (response.data.success) {
+                    Swal.fire({
+                        title: "สำเร็จ",
+                        text: "{{ __('manage.store_success_message') }}",
+                        icon: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "btn btn-success",
+                        confirmButtonText: "ตกลง"
+                    }).then(value => {
+                        if (response.data.redirect) {
+                            window.location.href = response.data.redirect;
+                        }
+                    });
+                } else {
+                    if (response.data.errors) {
+                        var errors = response.data.errors;
 
-                    if (response['success']) {
-                        window.location.href = "{{ route('orders.index') }}";
-                    } else {
-                        var errors = response.errors;
                         $('.error').removeClass('invalid-feedback').html('');
                         $("input[type='text'], select").removeClass('is-invalid');
 
                         $.each(errors, function (key, value) {
-                            $(`#${key}`,).addClass('is-invalid')
+                            $(`#${key}`).addClass('is-invalid')
                                 .siblings('p')
                                 .addClass('invalid-feedback')
                                 .html(value);
                         });
                     }
-                },
-                error: function (jqXHR, exception) {
-                    // Handle error here, e.g., display an error message
-                    console.log("Something went wrong");
-                    console.log(jqXHR);
                 }
+            }).catch(error => {
+                Swal.fire({
+                    title: "เกิดข้อผิดพลาด",
+                    text: response.data.message,
+                    icon: "error",
+                    showCancelButton: false,
+                    confirmButtonColor: "btn btn-danger",
+                    confirmButtonText: "ตกลง"
+                }).then(value => {
+                    if (value) {
+                        //
+                    }
+                });
             });
-
-            orderDetailsData = [];
-            refreshTable();
         });
 
         // Variable to store the index of the order detail being edited

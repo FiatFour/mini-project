@@ -63,6 +63,7 @@
         $(".btn-save-form").on("click", function() {
             let storeUri = "{{ route('products.store') }}";
             var formData = new FormData(document.querySelector('#productForm'));
+
             formData.append('test_form', true);
             axios.post(storeUri, formData).then(response => {
                 if (response.data.success) {
