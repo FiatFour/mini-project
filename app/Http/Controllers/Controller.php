@@ -9,4 +9,37 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    function responseValidateFailed($validator)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $validator->getMessageBag()->first()
+        ], 422);
+    }
+
+    function responseValidateSuccess($redirect)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'ok',
+            'redirect' => $redirect
+        ]);
+    }
+
+    function responseComplete()
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Complete',
+        ]);
+    }
+
+    function responseFailed($message = 'Complete')
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+        ]);
+    }
 }

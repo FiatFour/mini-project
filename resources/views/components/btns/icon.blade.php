@@ -1,0 +1,1 @@
+<a href="{{ $route }}" class="btn btn-primary {{ $btn_class }}"><i class="me-1 {{ $icon_class }}"></i> {{ $btn_text }}</a>

@@ -22,22 +22,22 @@ class Product extends Model
     public function scopeSearch($query, $request)
     {
         return $query->where(
-            function ($search) use ($request) {
-                if (!empty($request->keyword)) {
-                    $keyword = $request->keyword;
-                    $search->where('products.name', 'like', '%' . $keyword . '%');
-                    $search->orWhere('products.category_id', 'like', '%' . $keyword . '%');
-                    $search->orWhere('products.price', $keyword);
-                    $search->orWhere('categories.name', $keyword);
+            function ($s) use ($request) {
+                if (!empty($request->s)) {
+                    $s = $request->s;
+                    $s->where('products.name', 'like', '%' . $s . '%');
+                    $s->orWhere('products.category_id', 'like', '%' . $s . '%');
+                    $s->orWhere('products.price', $s);
+                    $s->orWhere('categories.name', $s);
                 }
                 if (!empty($request->name)) {
-                    $search->where('products.name', $request->name);
+                    $s->where('products.name', $request->name);
                 }
                 if (!empty($request->categoryId)) {
-                    $search->where('products.category_id', $request->categoryId);
+                    $s->where('products.category_id', $request->categoryId);
                 }
                 if (!empty($request->exp_date)) {
-                    $search->where('products.exp_date', $request->exp_date);
+                    $s->where('products.exp_date', $request->exp_date);
                 }
             }
         );

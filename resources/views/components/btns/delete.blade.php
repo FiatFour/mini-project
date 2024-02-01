@@ -1,0 +1,1 @@
+<button class="btn btn-sm btn-danger btn-delete-row" data-route-delete="{{ $route_delete }}" ><i class="far fa-trash-alt" ></i> {{ __('lang.delete') }}</button>     

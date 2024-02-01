@@ -12,7 +12,7 @@
     <section class="content">
         <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">{{ $page_title ?? '' }}</h1>
         <div class="p-3 bg-body-extra-light rounded push">
-            <form id="userForm">
+            <form id="save-form">
                 <div class="row mb-4">
                     <div class="col-6">
                         <x-forms.input id="username" :value="$user->username" :label="__('users.username')" :optionals="['placeholder' => 'กรอกข้อมูลชื่อผู้ใช้']" />
@@ -37,7 +37,7 @@
                             value="{{ $user->email }}"> --}}
                     </div>
                     <div class="col-6">
-                        <x-forms.input id="password" :value="$user->password" :label="__('users.password')" :optionals="['placeholder' => 'กรอก Password', 'type' => 'password']" />
+                        <x-forms.input id="password" :value="null" :label="__('users.password')" :optionals="['placeholder' => 'กรอก Password', 'type' => 'password']" />
 
                         {{-- <label class="form-label" for="password">{{ __('users.password') }}</label>
                         <input type="password" class="form-control" id="password" name="password"
@@ -55,19 +55,17 @@
                 </div>
                 <div class="row">
                     <input type="hidden" name="id" id="id" value="{{ $user->id }}">
-                    <div class="col-12 text-end">
-                        <a href="{{ route('users.index') }}"
-                            class="btn btn-secondary btn-custom-size me-2">{{ __('manage.back') }}</a>
-                        @if (!isset($view))
-                            <button type="button"
-                                class="btn btn-primary btn-custom-size btn-save-form">{{ __('manage.save') }}</button>
-                        @endif
-                    </div>
+                    <x-forms.submit-group :optionals="['url' => 'users.index', 'view' => empty($view) ? null : $view]" />
                 </div>
             </form>
         </div>
     </section>
 @endsection
+
+@include('components.sweetalert')
+@include('components.form-save', [
+    'store_uri' => route('users.store'),
+])
 
 @push('scripts')
     <script>
@@ -80,53 +78,53 @@
             $('#phone').prop('disabled', true);
         }
 
-        $(".btn-save-form").on("click", function() {
-            let storeUri = "{{ route('users.store') }}";
-            var formData = new FormData(document.querySelector('#userForm'));
-            formData.append('test_form', true);
-            axios.post(storeUri, formData).then(response => {
-                if (response.data.success) {
-                    Swal.fire({
-                        title: "สำเร็จ",
-                        text: "{{ __('manage.store_success_message') }}",
-                        icon: "success",
-                        showCancelButton: false,
-                        confirmButtonColor: "btn btn-success",
-                        confirmButtonText: "ตกลง"
-                    }).then(value => {
-                        if (response.data.redirect) {
-                            window.location.href = response.data.redirect;
-                        }
-                    });
-                } else {
-                    if (response.data.errors) {
-                        var errors = response.data.errors;
+        {{--$(".btn-save-form").on("click", function() {--}}
+        {{--    let storeUri = "{{ route('users.store') }}";--}}
+        {{--    var formData = new FormData(document.querySelector('#userForm'));--}}
+        {{--    formData.append('test_form', true);--}}
+        {{--    axios.post(storeUri, formData).then(response => {--}}
+        {{--        if (response.data.success) {--}}
+        {{--            Swal.fire({--}}
+        {{--                title: "สำเร็จ",--}}
+        {{--                text: "{{ __('manage.store_success_message') }}",--}}
+        {{--                icon: "success",--}}
+        {{--                showCancelButton: false,--}}
+        {{--                confirmButtonColor: "btn btn-success",--}}
+        {{--                confirmButtonText: "ตกลง"--}}
+        {{--            }).then(value => {--}}
+        {{--                if (response.data.redirect) {--}}
+        {{--                    window.location.href = response.data.redirect;--}}
+        {{--                }--}}
+        {{--            });--}}
+        {{--        } else {--}}
+        {{--            if (response.data.errors) {--}}
+        {{--                var errors = response.data.errors;--}}
 
-                        $('.error').removeClass('invalid-feedback').html('');
-                        $("input[type='text'], select").removeClass('is-invalid');
+        {{--                $('.error').removeClass('invalid-feedback').html('');--}}
+        {{--                $("input[type='text'], select").removeClass('is-invalid');--}}
 
-                        $.each(errors, function(key, value) {
-                            $(`#${key}`).addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('invalid-feedback')
-                                .html(value);
-                        });
-                    }
-                }
-            }).catch(error => {
-                Swal.fire({
-                    title: "เกิดข้อผิดพลาด",
-                    text: response.data.message,
-                    icon: "error",
-                    showCancelButton: false,
-                    confirmButtonColor: "btn btn-danger",
-                    confirmButtonText: "ตกลง"
-                }).then(value => {
-                    if (value) {
-                        //
-                    }
-                });
-            });
-        });
+        {{--                $.each(errors, function(key, value) {--}}
+        {{--                    $(`#${key}`).addClass('is-invalid')--}}
+        {{--                        .siblings('p')--}}
+        {{--                        .addClass('invalid-feedback')--}}
+        {{--                        .html(value);--}}
+        {{--                });--}}
+        {{--            }--}}
+        {{--        }--}}
+        {{--    }).catch(error => {--}}
+        {{--        Swal.fire({--}}
+        {{--            title: "เกิดข้อผิดพลาด",--}}
+        {{--            text: response.data.message,--}}
+        {{--            icon: "error",--}}
+        {{--            showCancelButton: false,--}}
+        {{--            confirmButtonColor: "btn btn-danger",--}}
+        {{--            confirmButtonText: "ตกลง"--}}
+        {{--        }).then(value => {--}}
+        {{--            if (value) {--}}
+        {{--                //--}}
+        {{--            }--}}
+        {{--        });--}}
+        {{--    });--}}
+        {{--});--}}
     </script>
 @endpush

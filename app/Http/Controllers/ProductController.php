@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -17,25 +18,25 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $keyword = $request->keyword;
         $name = $request->name;
         $exp_date = $request->exp_date;
         $categoryId = $request->categoryId;
+        $product_id = $request->product_id;
+        $s = $request->s;
         $products = Product::select('products.*', 'categories.name AS categoryName')
             ->latest('products.id')
             ->leftJoin(
-                'categories','categories.id',
+                'categories', 'categories.id',
                 'products.category_id'
             )
-            ->search($request)
-            ->paginate(5);
+            ->search($request->s, $request)->paginate(PER_PAGE);
 
         $products2 = Product::all();
 
         $categories = Category::select('name', 'id', 'name AS categoryName', 'id AS categoryId')->get();
         // dd($products);
         // dd($categories);
-        return view('products.index', compact('products', 'products2', 'keyword', 'name', 'exp_date', 'categories', 'categoryId'));
+        return view('products.index', compact('products', 'products2', 's', 'name', 'exp_date', 'categories', 'categoryId', 'product_id'));
     }
 
     /**
@@ -58,10 +59,18 @@ class ProductController extends Controller
     {
         // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'name' =>  $request->id == null ? 'required|unique:products' : 'required',
+            'name' => [
+                'required', 'string',
+                Rule::unique('products', 'name')->ignore($request->id),
+            ],
             'categoryId' => 'required',
             'price' => 'required',
             'exp_date' => 'required',
+        ], [], [
+            'name' => __('products.name'),
+            'categoryId' => __('products.category_id'),
+            'price' => __('products.price'),
+            'exp_date' => __('products.exp_date'),
         ]);
 
         //TODO
@@ -87,22 +96,22 @@ class ProductController extends Controller
             }
         }
 
-        if ($request->test_form) {
+        $product = Product::firstOrNew(['id' => $request->id]);
+        $product->name = $request->name;
+        $product->category_id = $request->categoryId;
+        $product->price = $request->price;
+        $product->mfg_date = $request->mfg_date;
+        $product->exp_date = $request->exp_date;
+        $product->detail = $request->detail;
+        $product->save();
 
-            $product = Product::firstOrNew(['id' => $request->id]);
-            $product->name = $request->name;
-            $product->category_id = $request->categoryId;
-            $product->price = $request->price;
-            $product->mfg_date = $request->mfg_date;
-            $product->exp_date = $request->exp_date;
-            $product->detail = $request->detail;
-            $product->save();
+//        return response()->json([
+//            'success' => true,
+//            'redirect' => route('products.index'),
+//        ]);
 
-            return response()->json([
-                'success' => true,
-                'redirect' => route('products.index'),
-            ]);
-        }
+        $redirect_route = route('products.index');
+        return $this->responseValidateSuccess($redirect_route);
     }
 
     public function edit(Product $product)
@@ -120,7 +129,6 @@ class ProductController extends Controller
         return view('products.form', compact('product', 'page_title', 'categories'));
     }
 
-    //TODO
     public function show(Product $product)
     {
         if ($product == null) {
@@ -132,9 +140,9 @@ class ProductController extends Controller
 
         $categories = Category::select('name', 'id', 'name AS categoryName', 'id AS categoryId')->orderBy('categoryName', 'ASC')->get();
 
-        $page_title =  __('manage.view') . __('products.page_title');
+        $page_title = __('manage.view') . __('products.page_title');
         $view = true;
-        return view('products.form', compact('product', 'view', 'categories'));
+        return view('products.form', compact('product', 'view', 'categories', 'page_title'));
     }
 
     public function destroy($id)

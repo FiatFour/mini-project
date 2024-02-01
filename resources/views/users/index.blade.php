@@ -11,55 +11,32 @@
             <form action="" method="GET">
                 <div class="row mb-4">
                     <div class="col-3">
-                        {{-- <label class="form-label" for="keyword">คำค้นหา</label>
-                        <input type="text" class="form-control" placeholder="Input Text" name="keyword" id="keyword"> --}}
-                        <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'" :optionals="['placeholder' => 'ใส่คำค้นหา']" />
+                        <x-forms.input id="s" :value="$s" :label="'คำค้นหา'"
+                                       :optionals="['placeholder' => 'ใส่คำค้นหา']"/>
                     </div>
                     <div class="col-3">
-                        {{-- <label class="form-label" for="username">{{ __('users.username') }}</label>
-                        <select class="js-select2 form-select" id="username" name="username" style="width: 100%;"
-                            data-placeholder="Choose one..">
-                            <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
-                            @if ($users2->isNotEmpty())
-                                @foreach ($users2 as $user)
-                                    <option {{ $username == $user->username ? 'selected' : '' }}
-                                        value="{{ $user->username }}">{{ $user->username }}</option>
-                                @endforeach
-                            @endif
-                        </select> --}}
-                        <x-forms.select id="username" :name="'username'" :items="$users2" :selected="$username" :label="__('users.username')"
-                            :optionals="['placeholder' => 'เลือก..']" />
+                        <x-forms.select-option id="username" :value="$username" :list="$users2"
+                                               :label="__('users.username')"/>
                     </div>
                     <div class="col-3">
-                        <x-forms.select id="name" :name="'name'" :items="$users2" :selected="$name" :label="__('users.name')"
-                            :optionals="['placeholder' => 'เลือก..']" />
+                        <x-forms.select-option id="name" :value="$name" :list="$users2"
+                                               :label="__('users.name')"/>
+                    </div>
 
-                        {{-- <label class="form-label" for="name">{{ __('users.name') }}</label>
-                        <select class="js-select2 form-select" id="name" name="name" style="width: 100%;"
-                            data-placeholder="Choose one..">
-                            <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
-                            @if ($users2->isNotEmpty())
-                                @foreach ($users2 as $user)
-                                    <option {{ $name == $user->name ? 'selected' : '' }} value="{{ $user->name }}">
-                                        {{ $user->name }}</option>
-                                @endforeach
-                            @endif
-                        </select> --}}
-                    </div>
-                    <div class="col-3 mt-4">
-                        <span class="d-flex flex-row justify-content-end" style="margin-top: 10px">
-                                <a href="{{ route('users.index') }}" class="btn btn-secondary d-flex align-items-center"
-                                    style="margin-left: 4%; width: 100px;">ล้างข้อมูล</a>
-                                <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>
-                        </span>
-                    </div>
+                    @include('components.btns.search')
+{{--                    <div class="col-3 mt-4">--}}
+{{--                        <span class="d-flex flex-row justify-content-end" style="margin-top: 10px">--}}
+{{--                                <a href="{{ route('users.index') }}" class="btn btn-secondary d-flex align-items-center"--}}
+{{--                                   style="margin-left: 4%; width: 100px;">ล้างข้อมูล</a>--}}
+{{--                                <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>--}}
+{{--                        </span>--}}
+{{--                    </div>--}}
                 </div>
+            </form>
         </div>
-        </form>
 
         <!-- All Customer -->
         <div class="block block-rounded">
-
             <div class="block-content">
                 <!-- All Customer Table -->
                 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
@@ -71,180 +48,125 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-vcenter">
                         <thead>
-                            <tr class="bg-body-dark">
-                                <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
-                                <th>{{ __('users.username') }}</th>
-                                <th>{{ __('users.name') }}</th>
-                                <th class="d-none d-sm-table-cell">{{ __('users.email') }}</th>
-                                <th class="text-center">{{ __('manage.tool') }}</th>
-                            </tr>
+                        <tr class="bg-body-dark">
+                            <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
+                            <th>{{ __('users.username') }}</th>
+                            <th>{{ __('users.name') }}</th>
+                            <th class="d-none d-sm-table-cell">{{ __('users.email') }}</th>
+                            <th class="text-center">{{ __('manage.tool') }}</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if ($users->isNotEmpty())
-                                @foreach ($users as $user)
-                                    <tr>
-                                        <td class="d-none d-sm-table-cell text-center">
-                                            {{ $users->firstItem() + $loop->index }}</td>
-                                        <td class="fw-semibold">
-                                            <a href="javascript:void(0)">{{ $user->username }}</a>
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $user->name }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $user->email }}
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="block-options">
-                                                <div class="dropdown">
-                                                    <button type="button" class="btn-block-option"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        <i class="fa fa-ellipsis-v"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        {{-- <a href="{{ route('users.view', $user->id) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
-                                                            <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
-                                                        </a>
-                                                        <a href="{{ route('users.edit', $user->id) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
-                                                            <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
-                                                        </a> --}}
-                                                        {{-- TODO --}}
-                                                        <a href="{{ route('users.show', ['user' => $user]) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
-                                                            <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
-                                                        </a>
-                                                        <a href="{{ route('users.edit', ['user' => $user]) }}"
-                                                            class="dropdown-item" href="javascript:void(0)">
-                                                            <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
-                                                        </a>
-                                                        <a class="dropdown-item" href="#"
-                                                            onclick="deleteRecord({{ $user->id }})">
-                                                            <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                        @if ($users->isNotEmpty())
+                            @foreach ($users as $index => $user)
+                                <tr>
+                                    <td class="d-none d-sm-table-cell text-center">
+                                        {{ $users->firstItem() + $index }}</td>
+                                    <td class="fw-semibold">
+                                        <a href="javascript:void(0)">{{ $user->username }}</a>
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ $user->name }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ $user->email }}
+                                    </td>
+                                    <td class="sticky-col text-center">
+                                        @include('components.dropdown-action', [
+                                            'view_route' => route('users.show', ['user' => $user]),
+                                            'edit_route' => route('users.edit', ['user' => $user]),
+                                            'delete_route' => route('users.destroy', [
+                                                'user' => $user,
+                                            ]),
+                                        ])
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                     <div class="d-flex flex-row d-flex justify-content-end">
                         {{ $users->links() }}
                     </div>
                 </div>
-                <!-- END All Customer Table -->
-
-                <!-- Pagination -->
-
-                {{-- <nav aria-label="Photos Search Navigation">
-                <ul class="pagination justify-content-end mt-2">
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-label="Previous">
-                            Prev
-                        </a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="javascript:void(0)">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">4</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" aria-label="Next">
-                            Next
-                        </a>
-                    </li>
-                </ul>
-            </nav> --}}
-                <!-- END Pagination -->
-
-
             </div>
         </div>
     </div>
 
-    <!-- Results -->
-    <!-- END Results -->
-    {{-- {{ $users->links() }} --}}
-    {{-- </div> --}}
-
-
 @endsection
 
-@push('scripts')
-    <script>
-        function deleteRecord(id) {
-            var url = "{{ route('users.destroy', 'ID') }}"
-            var newUrl = url.replace('ID', id)
-            Swal.fire({
-                title: "ยืนยันลบข้อมูล",
-                text: "ต้องการลบข้อมูลใช่หรือไม่?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#767E88",
-                cancelButtonText: "ยกเลิก",
-                confirmButtonText: "ยืนยัน"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.delete(newUrl).then(response => {
-                        if (response.data.success) {
-                            Swal.fire({
-                                title: "สำเร็จ",
-                                text: "{{ __('manage.store_success_message') }}",
-                                icon: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "btn btn-success",
-                                confirmButtonText: "ตกลง"
-                            }).then(value => {
-                                if (response.data.redirect) {
-                                    window.location.href = response.data.redirect;
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "เกิดข้อผิดพลาด",
-                                text: response.data.message,
-                                icon: "error",
-                                showCancelButton: false,
-                                confirmButtonColor: "btn btn-danger",
-                                confirmButtonText: "ตกลง"
-                            }).then(value => {
-                                if (value) {
-                                    //
-                                }
-                            });
-                        }
-                    }).catch(error => {
-                        Swal.fire({
-                            title: "เกิดข้อผิดพลาดaa",
-                            text: response.data.message,
-                            icon: "error",
-                            showCancelButton: false,
-                            confirmButtonColor: "btn btn-danger",
-                            confirmButtonText: "ตกลง"
-                        }).then(value => {
-                            if (value) {
-                                //
-                            }
-                        });
-                    });
-                }
-            });
-        }
-    </script>
-@endpush
+@include('components.select2-default')
+@include('components.sweetalert')
+@include('components.list-delete')
+@include('components.select2-ajax', [
+    'id' => 'username',
+    'url' => route('util.select2.users'),
+    'parent_id' => 'name',
+])
+
+{{--@push('scripts')--}}
+{{--    <script>--}}
+{{--        function deleteRecord(id) {--}}
+{{--            var url = "{{ route('users.destroy', 'ID') }}"--}}
+{{--            var newUrl = url.replace('ID', id)--}}
+{{--            Swal.fire({--}}
+{{--                title: "ยืนยันลบข้อมูล",--}}
+{{--                text: "ต้องการลบข้อมูลใช่หรือไม่?",--}}
+{{--                icon: "warning",--}}
+{{--                showCancelButton: true,--}}
+{{--                confirmButtonColor: "#d33",--}}
+{{--                cancelButtonColor: "#767E88",--}}
+{{--                cancelButtonText: "ยกเลิก",--}}
+{{--                confirmButtonText: "ยืนยัน"--}}
+{{--            }).then((result) => {--}}
+{{--                if (result.isConfirmed) {--}}
+{{--                    axios.delete(newUrl).then(response => {--}}
+{{--                        if (response.data.success) {--}}
+{{--                            Swal.fire({--}}
+{{--                                title: "สำเร็จ",--}}
+{{--                                text: "{{ __('manage.store_success_message') }}",--}}
+{{--                                icon: "success",--}}
+{{--                                showCancelButton: false,--}}
+{{--                                confirmButtonColor: "btn btn-success",--}}
+{{--                                confirmButtonText: "ตกลง"--}}
+{{--                            }).then(value => {--}}
+{{--                                if (response.data.redirect) {--}}
+{{--                                    window.location.href = response.data.redirect;--}}
+{{--                                }--}}
+{{--                            });--}}
+{{--                        } else {--}}
+{{--                            Swal.fire({--}}
+{{--                                title: "เกิดข้อผิดพลาด",--}}
+{{--                                text: response.data.message,--}}
+{{--                                icon: "error",--}}
+{{--                                showCancelButton: false,--}}
+{{--                                confirmButtonColor: "btn btn-danger",--}}
+{{--                                confirmButtonText: "ตกลง"--}}
+{{--                            }).then(value => {--}}
+{{--                                if (value) {--}}
+{{--                                    //--}}
+{{--                                }--}}
+{{--                            });--}}
+{{--                        }--}}
+{{--                    }).catch(error => {--}}
+{{--                        Swal.fire({--}}
+{{--                            title: "เกิดข้อผิดพลาดaa",--}}
+{{--                            text: response.data.message,--}}
+{{--                            icon: "error",--}}
+{{--                            showCancelButton: false,--}}
+{{--                            confirmButtonColor: "btn btn-danger",--}}
+{{--                            confirmButtonText: "ตกลง"--}}
+{{--                        }).then(value => {--}}
+{{--                            if (value) {--}}
+{{--                                //--}}
+{{--                            }--}}
+{{--                        });--}}
+{{--                    });--}}
+{{--                }--}}
+{{--            });--}}
+{{--        }--}}
+{{--    </script>--}}
+{{--@endpush--}}
 
 {{-- @section('customJs')
     @include('layouts.message')

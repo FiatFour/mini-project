@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use stdClass;
 
 class CategoryController extends Controller
@@ -19,23 +20,9 @@ class CategoryController extends Controller
         $name = $request->name;
         $status = $request->status;
         $code = $request->code;
-        $keyword = $request->keyword;
+        $s = $request->s;
         $categories = Category::select('*')
-            ->when($keyword, function ($query) use ($keyword) {
-                $query->where('name', 'like', '%' . $keyword . '%');
-                $query->orWhere('code', 'like', '%' . $keyword . '%');
-                $query->orWhere('status', $keyword);
-            })
-            ->when($code, function ($query) use ($code) {
-                $query->where('code', $code);
-            })
-            ->when($name, function ($query) use ($name) {
-                $query->where('name', $name);
-            })
-            ->when($status, function ($query) use ($status) {
-                $query->where('status', $status);
-            })
-            ->paginate(5);
+            ->search($request->s, $request)->paginate(PER_PAGE);
 
         $categories2 = Category::all();
 
@@ -43,7 +30,7 @@ class CategoryController extends Controller
         // The Array of names of variables we want to create
 
         $status_obj = $this->status_obj();
-        return view('categories.index', compact('categories', 'keyword', 'status', 'code', 'name', 'categories2', 'status_obj'));
+        return view('categories.index', compact('categories', 's', 'status', 'code', 'name', 'categories2', 'status_obj'));
     }
 
     public function status_obj()
@@ -88,10 +75,18 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'code' =>  $request->id == null ? 'required|unique:categories' : 'required',
+            'code' => [
+                'required', 'string',
+                Rule::unique('categories', 'code')->ignore($request->id),
+            ],
             'name' => 'required',
             'status' => 'required',
             'detail' => 'required',
+        ], [], [
+            'code' => __('categories.code'),
+            'name' => __('categories.name'),
+            'status' => __('categories.status'),
+            'detail' => __('categories.detail'),
         ]);
 
         //TODO
@@ -100,25 +95,26 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors(),
-                'message' => $validator->getMessageBag()->first()
+//                'message' => $validator->getMessageBag()->first()
             ]);
         }
-        if ($request->test_form) {
 
-            $category = Category::firstOrNew(['id' => $request->id]);
-            $category->code = $request->code;
-            $category->name = $request->name;
-            $category->status = $request->status;
-            $category->detail = $request->detail;
-            $category->save();
+        $category = Category::firstOrNew(['id' => $request->id]);
+        $category->code = $request->code;
+        $category->name = $request->name;
+        $category->status = $request->status;
+        $category->detail = $request->detail;
+        $category->save();
 
-            // $message = 'Category added successfully.';
-            // Session::flash('success', $message);
-            return response()->json([
-                'success' => true,
-                'redirect' => route('categories.index'),
-            ]);
-        }
+        // $message = 'Category added successfully.';
+        // Session::flash('success', $message);
+//            return response()->json([
+//                'success' => true,
+//                'redirect' => route('categories.index'),
+//            ]);
+
+        $redirect_route = route('categories.index');
+        return $this->responseValidateSuccess($redirect_route);
     }
 
     public function edit(Category $category)
@@ -145,12 +141,12 @@ class CategoryController extends Controller
 
             return redirect()->route('categories.index');
         }
-        $page_title = 'TODO';
+        $page_title = __('manage.view') . __('categories.page_title');
         $view = true;
-        return view('categories.form', compact('category', 'view'));
+        return view('categories.form', compact('category', 'view', 'page_title'));
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $category = Category::find($id);
 

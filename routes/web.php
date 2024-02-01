@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +52,13 @@ Route::middleware([
     Route::get('/getProduct',[\App\Http\Controllers\OrderController::class, 'getProduct'])->name('orders.getProduct');
     Route::post('/orders/add-order-detail',[\App\Http\Controllers\OrderController::class, 'addOrderDetail'])->name('orders.addOrderDetail');
     Route::post('/orders/update-order-detail', 'OrderController@updateOrderDetail')->name('orders.updateOrderDetail');
+
+
+    //Util Select2
+    Route::name('util.')->prefix('util')->group(function () {
+        Route::get('select2/products', [Controllers\Util\Select2Controller::class, 'getProducts'])->name('select2.products');
+        Route::get('select2/users', [Controllers\Util\Select2Controller::class, 'getUsers'])->name('select2.users');
+    });
     // Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
     //     Route::get('/categories', 'index')->name('categories.index');
     //     Route::get('/categories/create', 'create')->name('categories.create');
