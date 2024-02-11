@@ -695,6 +695,7 @@
       Core libraries and functionality
       webpack is putting everything together at assets/_js/main/app.js
     -->
+    <script src="{{ mix('js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -724,6 +725,217 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            /* $('.db-scroll').doubleScroll({
+                resetOnWindowResize: true
+            }); */
+
+            $('.table-responsive').on('show.bs.dropdown', function () {
+                $('.table-responsive').css("overflow", "inherit");
+            });
+
+            $('.table-responsive').on('hide.bs.dropdown', function () {
+                $('.table-responsive').css("overflow", "auto");
+            })
+        });
+
+        $('.number-format').toArray().forEach(function (field) {
+            new Cleave(field, {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand'
+            });
+        });
+
+        $('.tel-format').toArray().forEach(function (field) {
+            new Cleave(field, {
+                delimiter: '-',
+                blocks: [3, 3, 4],
+                uppercase: true
+            });
+        });
+
+        $(document).on('shown.bs.modal', function () {
+            $('.modal .number-format').toArray().forEach(function (field) {
+                new Cleave(field, {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'thousand'
+                });
+            });
+        });
+
+        function showLoading() {
+            $('.loading-wrapper').addClass('loadingio-spinner');
+        }
+
+        function hideLoading() {
+            $('.loading-wrapper').removeClass('loadingio-spinner');
+        }
+
+        function clearForm(selector) {
+            $(selector).find("input[type=text], input[type=number], input[type=email], input[type=password], textarea").val("");
+            $(selector).find("select").val(null).trigger('change');
+            $(selector).find("input[type=radio]").prop("checked", false);
+            $(selector).find("input[type=select]").prop("checked", false);
+        }
+
+        function appendHidden(selector, name, value) {
+            $("<input>").attr({
+                name: name,
+                type: "hidden",
+                value: value
+            }).appendTo(selector);
+        }
+
+        function __log(item = null) {
+            console.log(item)
+        }
+
+        function transaction() {
+            $('#transaction').modal('show');
+        }
+
+        function number_format(number, digit = 2) {
+            number = isNaN(number) ? 0 : number;
+            return (new Intl.NumberFormat([], {
+                minimumFractionDigits: digit,
+                maximumFractionDigits: digit
+            }).format(number));
+        }
+
+        function delay(callback, ms) {
+            var timer = 0;
+            return function () {
+                var context = this,
+                    args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    callback.apply(context, args);
+                }, ms || 0);
+            };
+        }
+
+        function disableInputs(inputs) {
+            inputs.forEach(input => {
+                input.setAttribute('readonly', 'true');
+                input.setAttribute('disabled', 'true');
+            });
+        }
+
+        function empty(data) {
+            // Check if data is a number or boolean, and return false as they're never considered empty
+            if (typeof data === 'number' || typeof data === 'boolean') {
+                return false;
+            }
+
+            // Check if data is undefined or null, and return true as they're considered empty
+            if (typeof data === 'undefined' || data === null) {
+                return true;
+            }
+
+            // Check if data has a length property (e.g. strings, arrays) and return true if the length is 0
+            if (typeof data.length !== 'undefined') {
+                return data.length === 0;
+            }
+
+            // Check if data is an object and use Object.keys() to determine if it has any enumerable properties
+            if (typeof data === 'object') {
+                return Object.keys(data).length === 0;
+            }
+
+            // Return false for any other data types, as they're not considered empty
+            return false;
+        };
+
+        function bind_on_change_radio(name, cb) {
+            $("input[type=radio][name=" + name + "]").on("change", function () {
+                var val = $("input[type=radio][name=" + name + "]:checked").val();
+                cb(parseInt(val, 10));
+            });
+            $("input[type=radio][name=" + name + "]:checked").trigger("change");
+        }
+
+        function set_select2(selector, value, label) {
+            selector.append(new Option(label, value, true, true)).trigger('change');
+        }
+
+        //     Vue Component
+        Vue.component('input-number-format-vue', {
+            template: '<input v-bind:name="name" class="form-control" @input="updateValue"></input>',
+            props: {
+                name: '',
+                options: Object,
+                value: null,
+            },
+            mounted() {
+                let input = $(this.$el);
+                if (this.value) {
+                    input.val(this.value).trigger('change')
+                }
+                new Cleave(input, {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'thousand',
+                })
+            },
+            methods: {
+                updateValue(event) {
+                    this.$emit('input', event.target.value);
+                }
+            }
+        });
+
+        Vue.component('input-tel-format-vue', {
+            template: '<input v-bind:name="name" class="form-control" @input="updateValue">',
+            props: {
+                name: '',
+                options: Object,
+                value: null,
+            },
+            mounted() {
+                let input = $(this.$el);
+                if (this.value) {
+                    input.val(this.value).trigger('change')
+                }
+                new Cleave(input, {
+                    blocks: [3, 3, 4],
+                    numericOnly: true,
+                    delimiter: '-',
+                })
+
+            },
+            methods: {
+                updateValue(event) {
+                    this.$emit('input', event.target.value);
+                }
+            }
+        });
+
+        Vue.component('input-citizen-format-vue', {
+            template: '<input v-bind:name="name" class="form-control" @input="updateValue">',
+            props: {
+                name: '',
+                options: Object,
+                value: null,
+            },
+            mounted() {
+                let input = $(this.$el);
+                if (this.value) {
+                    input.val(this.value).trigger('change')
+                }
+                new Cleave(input, {
+                    numeral: true,
+                    numeralThousandsGroupStyle: 'none'
+                })
+
+            },
+            methods: {
+                updateValue(event) {
+                    this.$emit('input', event.target.value);
+                }
             }
         });
     </script>

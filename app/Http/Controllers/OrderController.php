@@ -25,6 +25,8 @@ class OrderController extends Controller
             ->search($request)
             ->paginate(5);
 
+
+
 //        dd($orders);
         return view('orders.index', compact('orders', 'keyword'));
     }
@@ -45,9 +47,13 @@ class OrderController extends Controller
             )
             ->paginate(5);
 
+        $product_name = null;
+        $category_name = null;
+        $price = null;
+//        , 'product_name', 'category_name', 'price'
+
         $products2 = Product::all();
         $order = new Order();
-
         return view('orders.form', compact('product', 'page_title', 'products', 'products2', 'order'));
     }
 
@@ -75,8 +81,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-
-        dd($request->all());
 
         $validator = Validator::make($request->all(), [
             'order_name' => 'required',
@@ -164,7 +168,7 @@ class OrderController extends Controller
 
             return redirect()->route('orders.index');
         }
-        $orderDetailsWithRelations = OrderDetail::select('order_details.*', 'products.name AS productName', 'products.price', 'categories.name AS categoryName')
+        $order_detail_list = OrderDetail::select('order_details.*', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
             ->latest('order_details.id')
             ->leftJoin('products', 'products.id',
                 'order_details.product_id')
@@ -175,7 +179,7 @@ class OrderController extends Controller
 
         $page_title = __('manage.edit') . __('orders.page_title');
         $view = true;
-        return view('orders.form', compact('order', 'page_title', 'orderDetailsWithRelations', 'view'));
+        return view('orders.form', compact('order', 'page_title', 'order_detail_list', 'view'));
     }
 
     /**
@@ -197,7 +201,7 @@ class OrderController extends Controller
 //            ->orderBy('order_details.id', 'ASC')
 //            ->get();
 
-        $orderDetailsWithRelations = OrderDetail::select('order_details.*', 'products.name AS productName', 'products.price', 'categories.name AS categoryName')
+        $order_detail_list = OrderDetail::select('order_details.*', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
             ->latest('order_details.id')
             ->leftJoin('products', 'products.id',
                 'order_details.product_id')
@@ -207,6 +211,8 @@ class OrderController extends Controller
 //            ->paginate(10);
             ->get();
 //        dd($orderDetailsWithRelations);
+
+        dd($order_detail_list);
 
         $page_title = __('manage.edit') . __('orders.page_title');
         $edit = true;
@@ -220,7 +226,7 @@ class OrderController extends Controller
             ->paginate(5);
 
         $products2 = Product::all();
-        return view('orders.form', compact('order', 'page_title', 'orderDetailsWithRelations', 'edit', 'products', 'products2'));
+        return view('orders.form', compact('order', 'page_title', 'order_detail_list', 'edit', 'products', 'products2'));
     }
 
     /**

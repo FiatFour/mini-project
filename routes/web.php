@@ -58,6 +58,8 @@ Route::middleware([
     Route::name('util.')->prefix('util')->group(function () {
         Route::get('select2/products', [Controllers\Util\Select2Controller::class, 'getProducts'])->name('select2.products');
         Route::get('select2/users', [Controllers\Util\Select2Controller::class, 'getUsers'])->name('select2.users');
+        Route::get('select2/prices', [Controllers\Util\Select2Controller::class, 'getPrices'])->name('select2.prices');
+        Route::get('select2/categories', [Controllers\Util\Select2Controller::class, 'getCategories'])->name('select2.categories');
     });
     // Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
     //     Route::get('/categories', 'index')->name('categories.index');

@@ -7,6 +7,9 @@
         @if (session('message'))
             <div class="alert alert-success">{{ session('message') }} </div>
         @endif
+        <div id="addAttorneyVue">
+
+        </div>
         <div class="p-3 bg-body-extra-light rounded push">
             <form action="" method="GET">
                 <div class="row mb-4">
@@ -109,6 +112,26 @@
     'url' => route('util.select2.products'),
     'parent_id' => 'categoryId',
 ])
+
+<script>
+    let addAttorneyVue = new Vue({
+        el: '#attorney',
+        data: {
+            attorney_list: @if (isset($attorney_list))
+                @json($attorney_list)
+                @else
+            []
+            @endif ,
+            edit_index: null,
+            total_car: 0,
+            mode: null,
+        },
+        methods: {
+
+        },
+        props: ['title'],
+    });
+</script>
 
 {{--@push('scripts')--}}
 {{--    <script>--}}
