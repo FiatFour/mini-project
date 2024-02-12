@@ -134,7 +134,7 @@ class Select2Controller extends Controller
 
 function getCategories(Request $request)
     {
-        $list = $products = Product::select('products.*', 'categories.name AS category_name')
+        $list = Product::select('products.*', 'categories.name AS category_name')
             ->leftJoin(
                 'categories', 'categories.id',
                 'products.category_id'

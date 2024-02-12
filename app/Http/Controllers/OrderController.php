@@ -25,8 +25,6 @@ class OrderController extends Controller
             ->search($request)
             ->paginate(5);
 
-
-
 //        dd($orders);
         return view('orders.index', compact('orders', 'keyword'));
     }
@@ -73,6 +71,7 @@ class OrderController extends Controller
             'categoryName' => $product->categoryName,
             'price' => $product->price,
         ]);
+
     }
 
 
@@ -81,6 +80,8 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->withholding_tax);
+
 
         $validator = Validator::make($request->all(), [
             'order_name' => 'required',
@@ -97,6 +98,7 @@ class OrderController extends Controller
             'shipping_date.required' => 'The shipping date field is required.',
         ]);
 
+//        dd($request->all());
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -104,36 +106,25 @@ class OrderController extends Controller
             ]);
         }
 
-        if ($request->test_form) {
-
-            $orderDetails = $formData['orderDetails'];
-            $order = $formData['orderForm'];
-
-            $orderName = $order[0]['value'];
-            $orderPhone = $order[1]['value'];
-            $orderAddress = $order[2]['value'];
-            $orderDate = $order[3]['value'];
-            $orderShippingDate = $order[4]['value'];
-
             $order = Order::firstOrNew(['id' => $request->order_id]);
-            $order->name = $orderName;
-            $order->phone = $orderPhone;
-            $order->address = $orderAddress;
-            $order->order_date = $orderDate;
-            $order->shipping_date = $orderShippingDate;
+            $order->name = $request->order_name;
+            $order->phone = $request->order_phone;
+            $order->address = $request->order_address;
+            $order->order_date = $request->order_date;
+            $order->shipping_date = $request->shipping_date;
             $order->save();
 
             $orderAmount = 0;
             $orderTotal = 0;
             $orderSubTotal = 0;
 
-            foreach ($orderDetails as $orderDetail) {
-                $product = Product::select('*')->where('name', $orderDetail['productName'])->first();
-
+            foreach ($request->order_detail as $orderDetail) {
+//                $product = Product::select('*')->where('name', $request->order_name)->first();
+//                dd($orderDetail);
                 $ord = OrderDetail::firstOrNew(['order_id' => $request->order_id]);
                 $ord->order_id = $order->id;
-                $ord->product_id = $product->id;
-                $ord->category_id = $product->category_id;
+                $ord->product_id = $orderDetail['product_id'];
+//                $ord->category_id = $orderDetail['category_id'];
                 $ord->amount = $orderDetail['amount'];
                 $ord->sub_total = $orderDetail['sub_total'];
                 $ord->total = $orderDetail['total'];
@@ -141,12 +132,23 @@ class OrderController extends Controller
 
                 $orderAmount += $orderDetail['amount'];
                 $orderTotal += $orderDetail['total'];
-                $orderSubTotal += $orderDetail['sub_total'];
+//                $orderSubTotal += $orderDetail['sub_total'];
+            }
+
+            if($request->discount != null){
+                $order->discount = $request->discount;
+            }
+
+            if($request->withholding_tax != null){
+                $order->withholding_tax = true;
+                $orderTotal = $orderTotal * (100/103);
+            }else{
+                $order->withholding_tax = false;
             }
 
             $order->amount = $orderAmount;
             $order->total = $orderTotal;
-            $order->sub_total = $orderSubTotal;
+            $order->sub_total = ($orderAmount + $orderTotal) * (100 / 107);
             $order->save();
 
             return response()->json([
@@ -155,7 +157,6 @@ class OrderController extends Controller
             ]);
         }
 
-    }
 
     /**
      * Display the specified resource.
@@ -201,18 +202,26 @@ class OrderController extends Controller
 //            ->orderBy('order_details.id', 'ASC')
 //            ->get();
 
-        $order_detail_list = OrderDetail::select('order_details.*', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
+//        $category_id =  Product::select('products.*', 'categories.name AS category_name')
+//            ->leftJoin(
+//                'categories', 'categories.id',
+//                'products.category_id'
+//            );
+
+        $order_detail_list = OrderDetail::select('order_details.*', 'products.category_id AS category_id' , 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
             ->latest('order_details.id')
             ->leftJoin('products', 'products.id',
                 'order_details.product_id')
             ->leftJoin('categories', 'categories.id',
-                'order_details.category_id')
+                'products.category_id')
             ->where('order_details.order_id', $order->id)
 //            ->paginate(10);
             ->get();
 //        dd($orderDetailsWithRelations);
 
-        dd($order_detail_list);
+//        dd($order_detail_list);
+
+//        dd($order_detail_list);
 
         $page_title = __('manage.edit') . __('orders.page_title');
         $edit = true;

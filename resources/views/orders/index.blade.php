@@ -15,11 +15,12 @@
                         <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'" :optionals="['placeholder' => 'ใส่คำค้นหา']" />
                     </div>
                 </div>
-                <div class="d-flex flex-row d-flex justify-content-end">
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary"
-                        style="margin-left: 4%; width: 100px">ล้างข้อมูล</a>
-                    <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>
-                </div>
+{{--                <div class="d-flex flex-row d-flex justify-content-end">--}}
+{{--                    <a href="{{ route('orders.index') }}" class="btn btn-secondary"--}}
+{{--                        style="margin-left: 4%; width: 100px">ล้างข้อมูล</a>--}}
+{{--                    <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>--}}
+{{--                </div>--}}
+                @include('components.btns.search')
             </form>
         </div>
 

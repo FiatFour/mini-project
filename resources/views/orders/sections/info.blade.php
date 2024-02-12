@@ -32,5 +32,17 @@
                        :label="'ที่อยู่' . __('orders.shop') . 'จัดส่ง'"
                        :optionals="['placeholder' => 'ที่อยู่' . __('orders.shop'). 'จัดส่ง']"/>
     </div>
+
+    <div class="row mb-4">
+        <div class="col-3">
+            <x-forms.input id="order_date" :value="$order->order_date" :label="'วันที่สั่งซื้อ'"
+                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+        </div>
+
+        <div class="col-3">
+            <x-forms.input id="shipping_date" :value="$order->shipping_date" :label="'วันที่จัดส่ง'"
+                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+        </div>
+    </div>
 </div>
 

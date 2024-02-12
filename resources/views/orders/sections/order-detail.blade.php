@@ -31,6 +31,7 @@
                     <td>@{{ item.amount }}</td>
                     <td>@{{ item.sub_total }}</td>
                     <td>@{{ item.total }}</td>
+{{--                    <td>@{{ item.order_id }}</td>--}}
                     <td class="sticky-col text-center">
                         <div class="btn-group">
                             <div class="col-sm-12">
@@ -52,6 +53,8 @@
                         </div>
                     </td>
                     <input type="hidden" v-bind:name="'order_detail['+ index+ '][id]'" v-bind:value="item.id">
+                    <input type="hidden" v-bind:name="'order_detail['+ index+ '][order_id]'" id="order_id"
+                        v-bind:value="item.order_id">
                     <input type="hidden" v-bind:name="'order_detail['+ index+ '][product_id]'" id="product_id"
                         v-bind:value="item.product_id">
                     <input type="hidden" v-bind:name="'order_detail['+ index+ '][category_id]'" id="category_id"
@@ -74,12 +77,12 @@
             </tbody>
         </table>
     </div>
-    <div class="row">
-        <div class="col-md-12 text-end">
-            <button type="button" class="btn btn-primary" onclick="addOrderDetail()"
-                id="openModal">{{ __('manage.add') }}</button>
-        </div>
-    </div>
+{{--    <div class="row">--}}
+{{--        <div class="col-md-12 text-end">--}}
+{{--            <button type="button" class="btn btn-primary" onclick="addOrderDetail()"--}}
+{{--                id="openModal">{{ __('manage.add') }}</button>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 </div>
 @include('orders.modals.order-detail-modal')
 

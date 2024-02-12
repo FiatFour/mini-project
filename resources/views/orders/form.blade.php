@@ -126,13 +126,13 @@
                             <label class="text-start col-form-label">
                                 จำนวนเงินรวมทั้งสิ้น
                             </label>
-                            <input disabled type="text" class="form-control col-sm-4" value="{{$order->total}}">
+                            <input disabled type="text" class="form-control col-sm-4" value="{{$order->total - $order->discount}}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 ส่วนลด
                             </label>
-                            <input type="text" class="form-control col-sm-4" value="" id="discount">
+                            <input type="text" class="form-control col-sm-4" id="discount" name="discount" value="{{$order->discount != 0 ? $order->discount : null}}">
                         </div>
 
                     </div>
@@ -141,8 +141,8 @@
                         หักภาษี
                     </label>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="taxCheckbox"
-                               name="taxCheckbox">
+                        <input class="form-check-input" type="checkbox" id="withholding_tax"
+                               name="withholding_tax" {{$order->withholding_tax != false ? 'checked' : ''}}>
                         <label class="form-check-label" for="taxCheckbox">หักภาษี ณ ที่จ่าย 3 %</label>
                     </div>
                 </div>
@@ -172,10 +172,10 @@
 
 @include('orders.scripts.order-detail-script')
 
-@include('components.select2-ajax', [
-    'id' => 'product_id',
-    'url' => route('util.select2.products'),
-])
+{{--@include('components.select2-ajax', [--}}
+{{--    'id' => 'product_id',--}}
+{{--    'url' => route('util.select2.products'),--}}
+{{--])--}}
 
 @include('components.select2-ajax', [
     'id' => 'product_field',
