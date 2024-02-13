@@ -50,6 +50,7 @@ Route::middleware([
     Route::resource('products', App\Http\Controllers\ProductController::class);
     Route::resource('orders', App\Http\Controllers\OrderController::class);
     Route::get('/getProduct',[\App\Http\Controllers\OrderController::class, 'getProduct'])->name('orders.getProduct');
+    Route::get('/get-price-category',[\App\Http\Controllers\OrderController::class, 'getPriceAndCategory'])->name('orders.getPriceAndCategory');
     Route::post('/orders/add-order-detail',[\App\Http\Controllers\OrderController::class, 'addOrderDetail'])->name('orders.addOrderDetail');
     Route::post('/orders/update-order-detail', 'OrderController@updateOrderDetail')->name('orders.updateOrderDetail');
 

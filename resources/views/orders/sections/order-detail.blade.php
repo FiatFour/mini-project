@@ -57,8 +57,8 @@
                         v-bind:value="item.order_id">
                     <input type="hidden" v-bind:name="'order_detail['+ index+ '][product_id]'" id="product_id"
                         v-bind:value="item.product_id">
-                    <input type="hidden" v-bind:name="'order_detail['+ index+ '][category_id]'" id="category_id"
-                        v-bind:value="item.category_id">
+{{--                    <input type="hidden" v-bind:name="'order_detail['+ index+ '][category_id]'" id="category_id"--}}
+{{--                        v-bind:value="item.category_id">--}}
                     <input type="hidden" v-bind:name="'order_detail['+ index+ '][price]'" id="price"
                         v-bind:value="item.price">
                     <input type="hidden" v-bind:name="'order_detail['+ index+ '][amount]'" id="amount"

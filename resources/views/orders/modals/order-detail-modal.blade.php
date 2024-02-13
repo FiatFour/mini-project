@@ -18,15 +18,17 @@
                                 'ajax' => true,
                                 'select_class' => 'js-select2 js-select2-custom',
                             ]"/>
+
                         </div>
 
                         <div class="col-6">
-                            <x-forms.select-option id="category_field" :value="null" :list="null"
-                                                   :label="'ชื่อ' . __('categories.page_title')"
-                                                   :optionals="[
-                                'ajax' => true,
-                                'select_class' => 'js-select2 js-select2-custom',
-                            ]"/>
+{{--                            <x-forms.select-option id="category_field" :value="null" :list="null"--}}
+{{--                                                   :label="'ชื่อ' . __('categories.page_title')"--}}
+{{--                                                   :optionals="[--}}
+{{--                                'ajax' => true,--}}
+{{--                                'select_class' => 'js-select2 js-select2-custom',--}}
+{{--                            ]"/>--}}
+                        <x-forms.input-new-line id="category_field" :value="null" :label="__('categories.page_title')" :optionals="['required' => true]" />
                         </div>
                     </div>
 
@@ -41,12 +43,14 @@
                         {{--                            <input type="number" id="price_field">--}}
                         {{--                        </div>--}}
                         <div class="col-6">
-                            <x-forms.select-option2 id="price_field" :value="null" :list="null"
-                                                    :label="__('orders.price')"
-                                                    :optionals="[
-                                'ajax' => true,
-                                'select_class' => 'js-select2 js-select2-custom',
-                            ]"/>
+{{--                            <x-forms.select-option2 id="price_field" :value="null" :list="null"--}}
+{{--                                                    :label="__('orders.price')"--}}
+{{--                                                    :optionals="[--}}
+{{--                                'ajax' => true,--}}
+{{--                                'select_class' => 'js-select2 js-select2-custom',--}}
+{{--                            ]"/>--}}
+                            <x-forms.input-new-line id="price_field" :value="null" :label="__('orders.price')" :optionals="['required' => true]" />
+
                         </div>
 
                         <div class="col-6">

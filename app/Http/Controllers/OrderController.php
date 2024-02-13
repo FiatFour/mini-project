@@ -45,11 +45,6 @@ class OrderController extends Controller
             )
             ->paginate(5);
 
-        $product_name = null;
-        $category_name = null;
-        $price = null;
-//        , 'product_name', 'category_name', 'price'
-
         $products2 = Product::all();
         $order = new Order();
         return view('orders.form', compact('product', 'page_title', 'products', 'products2', 'order'));
@@ -106,56 +101,56 @@ class OrderController extends Controller
             ]);
         }
 
-            $order = Order::firstOrNew(['id' => $request->order_id]);
-            $order->name = $request->order_name;
-            $order->phone = $request->order_phone;
-            $order->address = $request->order_address;
-            $order->order_date = $request->order_date;
-            $order->shipping_date = $request->shipping_date;
-            $order->save();
+        $order = Order::firstOrNew(['id' => $request->order_id]);
+        $order->name = $request->order_name;
+        $order->phone = $request->order_phone;
+        $order->address = $request->order_address;
+        $order->order_date = $request->order_date;
+        $order->shipping_date = $request->shipping_date;
+        $order->save();
 
-            $orderAmount = 0;
-            $orderTotal = 0;
-            $orderSubTotal = 0;
+        $orderAmount = 0;
+        $orderTotal = 0;
+        $orderSubTotal = 0;
 
-            foreach ($request->order_detail as $orderDetail) {
+        foreach ($request->order_detail as $orderDetail) {
 //                $product = Product::select('*')->where('name', $request->order_name)->first();
 //                dd($orderDetail);
-                $ord = OrderDetail::firstOrNew(['order_id' => $request->order_id]);
-                $ord->order_id = $order->id;
-                $ord->product_id = $orderDetail['product_id'];
+            $ord = OrderDetail::firstOrNew(['order_id' => $request->order_id]);
+            $ord->order_id = $order->id;
+            $ord->product_id = $orderDetail['product_id'];
 //                $ord->category_id = $orderDetail['category_id'];
-                $ord->amount = $orderDetail['amount'];
-                $ord->sub_total = $orderDetail['sub_total'];
-                $ord->total = $orderDetail['total'];
-                $ord->save();
+            $ord->amount = $orderDetail['amount'];
+            $ord->sub_total = $orderDetail['sub_total'];
+            $ord->total = $orderDetail['total'];
+            $ord->save();
 
-                $orderAmount += $orderDetail['amount'];
-                $orderTotal += $orderDetail['total'];
+            $orderAmount += $orderDetail['amount'];
+            $orderTotal += $orderDetail['total'];
 //                $orderSubTotal += $orderDetail['sub_total'];
-            }
-
-            if($request->discount != null){
-                $order->discount = $request->discount;
-            }
-
-            if($request->withholding_tax != null){
-                $order->withholding_tax = true;
-                $orderTotal = $orderTotal * (100/103);
-            }else{
-                $order->withholding_tax = false;
-            }
-
-            $order->amount = $orderAmount;
-            $order->total = $orderTotal;
-            $order->sub_total = ($orderAmount + $orderTotal) * (100 / 107);
-            $order->save();
-
-            return response()->json([
-                'success' => true,
-                'redirect' => route('orders.index'),
-            ]);
         }
+
+        if ($request->discount != null) {
+            $order->discount = $request->discount;
+        }
+
+        if ($request->withholding_tax != null) {
+            $order->withholding_tax = true;
+            $orderTotal = $orderTotal * (100 / 103);
+        } else {
+            $order->withholding_tax = false;
+        }
+
+        $order->amount = $orderAmount;
+        $order->total = $orderTotal;
+        $order->sub_total = ($orderAmount + $orderTotal) * (100 / 107);
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'redirect' => route('orders.index'),
+        ]);
+    }
 
 
     /**
@@ -176,7 +171,7 @@ class OrderController extends Controller
             ->leftJoin('categories', 'categories.id',
                 'order_details.category_id')
             ->where('order_details.order_id', $order->id)
-            ->paginate(10);
+            ->get();
 
         $page_title = __('manage.edit') . __('orders.page_title');
         $view = true;
@@ -208,7 +203,7 @@ class OrderController extends Controller
 //                'products.category_id'
 //            );
 
-        $order_detail_list = OrderDetail::select('order_details.*', 'products.category_id AS category_id' , 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
+        $order_detail_list = OrderDetail::select('order_details.*', 'products.category_id AS category_id', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
             ->latest('order_details.id')
             ->leftJoin('products', 'products.id',
                 'order_details.product_id')
@@ -269,5 +264,19 @@ class OrderController extends Controller
             'message' => 'Order deleted successfully',
             'redirect' => route('orders.index')
         ]);
+
+    }
+
+    function getPriceAndCategory(Request $request)
+    {
+        $data = Product::select('products.id','products.category_id AS category_id', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
+            ->leftJoin('categories', 'categories.id',
+                'products.category_id')
+            ->where('products.id', $request->id)
+            ->first();
+        return [
+            'success' => true,
+            'data' => $data,
+        ];
     }
 }

@@ -183,19 +183,19 @@
     'url' => route('util.select2.products'),
 ])
 
-@include('components.select2-ajax', [
-    'id' => 'category_field',
-    'parent_id' => 'product_field',
-    'modal' => '#modal-order-detail',
-    'url' => route('util.select2.categories'),
-])
+{{--@include('components.select2-ajax', [--}}
+{{--    'id' => 'category_field',--}}
+{{--    'parent_id' => 'product_field',--}}
+{{--    'modal' => '#modal-order-detail',--}}
+{{--    'url' => route('util.select2.categories'),--}}
+{{--])--}}
 
-@include('components.select2-ajax', [
-    'id' => 'price_field',
-    'parent_id' => 'product_field',
-    'modal' => '#modal-order-detail',
-    'url' => route('util.select2.prices'),
-])
+{{--@include('components.select2-ajax', [--}}
+{{--    'id' => 'price_field',--}}
+{{--    'parent_id' => 'product_field',--}}
+{{--    'modal' => '#modal-order-detail',--}}
+{{--    'url' => route('util.select2.prices'),--}}
+{{--])--}}
 
 
 @push('scripts')
