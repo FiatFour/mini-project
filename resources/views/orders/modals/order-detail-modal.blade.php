@@ -63,6 +63,9 @@
                         </div>
                     </div>
 
+{{--                    <input type="hidden" id="order_id_field" name="order_id_field">--}}
+                    <input type="hidden" id="id_field" name="id_field">
+
                 </div>
             </div>
             <div class="modal-footer">

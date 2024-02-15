@@ -61,7 +61,7 @@
         });
     }
     $('.js-select2-custom').on('select2:open', function(e) {
-        $('input.select2-search__field').prop('placeholder', 'ค้นหา...xxxxxx');
+        $('input.select2-search__field').prop('placeholder', 'ค้นหา...');
         $(".select2-selection--multiple .select2-search__field").css("width", "6em");
     });
 </script>

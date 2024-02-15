@@ -17,95 +17,6 @@
                 @endif
             </x-blocks.block>
 
-{{--            <div class="block block-rounded">--}}
-{{--                <div class="block-content">--}}
-{{--                    <!-- All Category Table -->--}}
-{{--                    @if (!isset($view))--}}
-{{--                        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">--}}
-{{--                            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">ข้อมูลสินค้า</h1>--}}
-{{--                            <a href="#" type="button" class="btn btn-alt-primary my-2" data-bs-toggle="modal"--}}
-{{--                               data-bs-target="#modal-block-popout">--}}
-{{--                                <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล--}}
-{{--                            </a>--}}
-{{--                            @include('orders.modal')--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
-
-{{--                    <div class="table-responsive">--}}
-{{--                        <table class="table table-striped table-borderless table-vcenter">--}}
-{{--                            <thead>--}}
-{{--                            <tr class="bg-body-dark">--}}
-{{--                                <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>--}}
-{{--                                <th>ชื่อ{{ __('products.page_title') }}</th>--}}
-{{--                                <th>{{ __('categories.page_title') }}</th>--}}
-{{--                                <th>ราคาขาย</th>--}}
-{{--                                <th>จำนวน</th>--}}
-{{--                                <th>ราคา (ไม่รวม VAT)</th>--}}
-{{--                                <th>ราคาสุทธิ (รวม VAT)</th>--}}
-{{--                                <th class="text-center">เครื่องมือ</th>--}}
-{{--                            </tr>--}}
-{{--                            </thead>--}}
-{{--                            <tbody id="orderDetailsTableBody">--}}
-{{--                            @if (isset($edit) || isset($view))--}}
-{{--                                @if (sizeof($orderDetailsWithRelations) > 0 )--}}
-{{--                                    @foreach ($orderDetailsWithRelations as $index => $orderDetailsWithRelation)--}}
-{{--                                        <tr>--}}
-{{--                                            <td class="d-none d-sm-table-cell text-center">--}}
-{{--                                                {{ $index + 1 }}</td>--}}
-{{--                                            <td class="fw-semibold">--}}
-{{--                                                <a href="javascript:void(0)">{{ $orderDetailsWithRelation->productName }}</a>--}}
-{{--                                            </td>--}}
-{{--                                            <td class="d-none d-sm-table-cell">--}}
-{{--                                                {{ $orderDetailsWithRelation->categoryName }}--}}
-{{--                                            </td>--}}
-{{--                                            <td class="d-none d-sm-table-cell">--}}
-{{--                                                {{ number_format($orderDetailsWithRelation->price, 2) }}--}}
-{{--                                            </td>--}}
-{{--                                            <td class="d-none d-sm-table-cell">--}}
-{{--                                                {{ $orderDetailsWithRelation->amount }}--}}
-{{--                                            </td>--}}
-{{--                                            <td class="d-none d-sm-table-cell">--}}
-{{--                                                {{ number_format($orderDetailsWithRelation->sub_total, 2) }}--}}
-{{--                                            </td>--}}
-{{--                                            <td class="d-none d-sm-table-cell">--}}
-{{--                                                {{ number_format($orderDetailsWithRelation->total, 2) }}--}}
-{{--                                            </td>--}}
-{{--                                            <td class="text-center">--}}
-{{--                                                <div class="block-options">--}}
-{{--                                                    <div class="dropdown">--}}
-{{--                                                        <button type="button" class="btn-block-option"--}}
-{{--                                                                data-bs-toggle="dropdown" aria-haspopup="true"--}}
-{{--                                                                aria-expanded="false">--}}
-{{--                                                            <i class="fa fa-ellipsis-v"></i>--}}
-{{--                                                        </button>--}}
-{{--                                                        <div class="dropdown-menu dropdown-menu-end">--}}
-{{--                                                            <a href="{{ route('orders.show', ['order' => $order]) }}"--}}
-{{--                                                               class="dropdown-item">--}}
-{{--                                                                <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล--}}
-{{--                                                            </a>--}}
-{{--                                                            <a onclick="editOrderDetail({{$index}})"--}}
-{{--                                                               class="dropdown-item">--}}
-{{--                                                                <i class="fa fa-fw fa-edit me-1"></i> แก้ไข--}}
-{{--                                                            </a>--}}
-{{--                                                            <a class="dropdown-item" href="#"--}}
-{{--                                                               onclick="deleteRecord({{ $order->id }})">--}}
-{{--                                                                <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ--}}
-{{--                                                            </a>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-
-{{--                                            </td>--}}
-{{--                                        </tr>--}}
-{{--                                    @endforeach--}}
-{{--                                @endif--}}
-{{--                            @endif--}}
-{{--                            </tbody>--}}
-{{--                        </table>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
             @if (isset($edit) || isset($view))
                 <div class="p-3 bg-body-extra-light rounded push">
                     <div class="row mb-4">
@@ -113,28 +24,27 @@
                             <label class="text-start col-form-label">
                                 ราคา (ไม่รวม VAT)
                             </label>
-                            <input disabled type="text" class="form-control col-sm-4" value="{{$order->sub_total}}">
+                            <input disabled type="text" class="form-control col-sm-4" value="{{ number_format($order->total * (100 / 107), 2) }}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 VAT 7%
                             </label>
                             <input disabled type="text" class="form-control col-sm-4"
-                                   value="{{$order->total - $order->sub_total}}">
+                                   value="{{ number_format($order->total - ($order->total * (100 / 107)), 2) }}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 จำนวนเงินรวมทั้งสิ้น
                             </label>
-                            <input disabled type="text" class="form-control col-sm-4" value="{{$order->total - $order->discount}}">
+                            <input disabled type="text" class="form-control col-sm-4" value="{{number_format($order->total - $order->discount, 2)}}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 ส่วนลด
                             </label>
-                            <input type="text" class="form-control col-sm-4" id="discount" name="discount" value="{{$order->discount != 0 ? $order->discount : null}}">
+                            <input type="text" class="form-control col-sm-4" id="discount" name="discount" value="{{ number_format($order->discount != 0 ? $order->discount : null, 2) }}">
                         </div>
-
                     </div>
 
                     <label class="text-start col-form-label">
@@ -159,6 +69,7 @@
                     @endif
                 </div>
             </div>
+
         </form>
 
     </section>

@@ -11,7 +11,7 @@
             {{'รหัส' . __('orders.shop')}}
         </label>
         <input disabled type="text" class="form-control col-sm-4" placeholder="กรอกข้อมูลร้านค้า"
-               value="{{isset($order) ? $order->id : ' '}}">
+               value="{{isset($order) ? $order->shop_code : ' '}}">
         <p></p>
     </div>
     <div class="col-3">

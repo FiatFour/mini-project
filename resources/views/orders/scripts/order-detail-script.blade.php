@@ -27,14 +27,16 @@
                 clearModalData: function () {
                     $("#amount").val('');
                     $("#price").val('');
-                    $("#product_id").val('').change();
-                    $("#category_name").val('').change();
+                    $("#amount_field").val('').change();
+                    $("#category_field").val('').change();
                 },
                 loadModalData: function (index) {
                     var temp = this.order_detail_list[index];
                     $("#amount_field").val(temp.amount);
                     $("#category_field").val(temp.category_name);
                     $("#price_field").val(temp.price);
+                    $("#order_id_field").val(temp.order_id);
+                    $("#id_field").val(temp.id);
                     //$("#province_field").val(temp.province_id).change();
 
                     if (temp.product_id) {
@@ -46,8 +48,6 @@
                     // if (temp.price) {
                     //     set_select2($("#price_field"), temp.price, temp.price);
                     // }
-
-
                 },
                 openModal: function () {
                     $("#modal-order-detail").modal("show");
@@ -84,7 +84,8 @@
                     // var price = (price_field) ? document.getElementById('price_field').selectedOptions[0].text : '';
                     // var price = (price_field) ? document.getElementById('price_field').selectedOptions[0].text : '';
                     var price = document.getElementById("price_field").value;
-                    var price_field = document.getElementById("price_field").value;
+                    // var order_id = document.getElementById("order_id_field").value;
+                    var id = document.getElementById("id_field").value;
                     return {
                         amount: amount,
                         product_id: product_id,
@@ -93,7 +94,9 @@
                         category_name: category_name,
                         price: price,
                         sub_total: (price * amount) * (100 / 107),
-                        total: price * amount
+                        total: price * amount,
+                        // order_id: order_id,
+                        id: id
                     };
                 },
                 validateDataObject: function (order_detail) {
@@ -125,7 +128,11 @@
                 /* set_select2: function(selector, id, value){
                     set_select2(selector, id, value);
                 } */
+                getNumberWithCommas(x) {
+                    return numberWithCommas(x);
+                },
             },
+
             props: ['title'],
         });
         addOrderDetailVue.display();
@@ -155,5 +162,10 @@
                 }
             });
         });
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        }
+
     </script>
 @endpush

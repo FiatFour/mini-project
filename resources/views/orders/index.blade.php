@@ -74,7 +74,7 @@
                                             {{ $order->amount }}
                                         </td>
                                         <td class="d-none d-sm-table-cell">
-                                            {{ number_format($order->total, 2) }}
+                                            {{ number_format($order->total - $order->discount, 2) }}
                                         </td>
                                         <td class="text-center">
                                             <div class="block-options">

@@ -29,9 +29,8 @@
                     <td>@{{ item.category_name }}</td>
                     <td class="td-break" style="white-space: pre-wrap;">@{{ item.price }}</td>
                     <td>@{{ item.amount }}</td>
-                    <td>@{{ item.sub_total }}</td>
-                    <td>@{{ item.total }}</td>
-{{--                    <td>@{{ item.order_id }}</td>--}}
+                    <td>@{{ getNumberWithCommas(item.sub_total) }}</td>
+                    <td>@{{ getNumberWithCommas(item.total) }}</td>
                     <td class="sticky-col text-center">
                         <div class="btn-group">
                             <div class="col-sm-12">
