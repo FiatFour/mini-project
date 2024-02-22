@@ -75,6 +75,7 @@
     </section>
 @endsection
 
+@include('orders.scripts.export-order-detail-script')
 @include('components.select2-default')
 @include('components.sweetalert')
 @include('components.form-save', [

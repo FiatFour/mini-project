@@ -93,8 +93,8 @@
                         // category_id: category_id,
                         category_name: category_name,
                         price: price,
-                        sub_total: (price * amount) * (100 / 107),
-                        total: price * amount,
+                        sub_total: ((price * amount) * (100 / 107)).toFixed(2),
+                        total: (price * amount).toFixed(2),
                         // order_id: order_id,
                         id: id
                     };

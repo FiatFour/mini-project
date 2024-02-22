@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
+use App\Models\OrderDetail;
+
+function get_count_order_detail($id){
+    $count = OrderDetail::where('order_id', $id)->count();
+    return $count;
+}
+
+
 if (!function_exists('carbon')) {
     function carbon($time = null, $tz = null)
     {

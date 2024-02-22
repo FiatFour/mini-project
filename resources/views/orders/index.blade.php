@@ -12,14 +12,28 @@
             <form action="" method="GET">
                 <div class="row mb-4">
                     <div class="col-3">
-                        <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'" :optionals="['placeholder' => 'ใส่คำค้นหา']" />
+                        <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'"
+                                       :optionals="['placeholder' => 'ใส่คำค้นหา']"/>
+                    </div>
+
+                    <div class="col-3">
+                        <x-forms.select-option id="id" :value="$id" :list="$d"
+                                               :label="__('orders.name')" />
+                    </div>
+
+                    <div class="col-3">
+                        <x-forms.input id="order_date" :value="$order_date" :label="__('orders.order_date')" :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+                    </div>
+
+                    <div class="col-3">
+                        <x-forms.input id="shipping_date" :value="$shipping_date" :label="__('orders.shipping_date')" :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
                     </div>
                 </div>
-{{--                <div class="d-flex flex-row d-flex justify-content-end">--}}
-{{--                    <a href="{{ route('orders.index') }}" class="btn btn-secondary"--}}
-{{--                        style="margin-left: 4%; width: 100px">ล้างข้อมูล</a>--}}
-{{--                    <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>--}}
-{{--                </div>--}}
+                {{--                <div class="d-flex flex-row d-flex justify-content-end">--}}
+                {{--                    <a href="{{ route('orders.index') }}" class="btn btn-secondary"--}}
+                {{--                        style="margin-left: 4%; width: 100px">ล้างข้อมูล</a>--}}
+                {{--                    <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>--}}
+                {{--                </div>--}}
                 @include('components.btns.search')
             </form>
         </div>
@@ -32,80 +46,98 @@
                 <!-- All Category Table -->
                 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                     <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3"></h1>
-                    <a href="{{ route('products.create') }}" type="button" class="btn btn-alt-success my-2"
-                        style="margin-right: 5px">
+{{--                    <a href="{{ route('orders.export-excel') }}" type="button" class="btn btn-alt-success my-2"--}}
+{{--                       style="margin-right: 5px">--}}
+{{--                        <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel--}}
+{{--                    </a>--}}
+
+                    <a href="#" type="button" class="btn btn-alt-success my-2" onclick="exportOrders()"
+                       style="margin-right: 5px">
                         <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel
-                        <a href="{{ route('orders.create') }}" type="button" class="btn btn-alt-primary my-2">
-                            <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
-                        </a>
+                    </a>
+
+                    <a href="{{ route('orders.create') }}" type="button" class="btn btn-alt-primary my-2">
+                        <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
                     </a>
                 </div>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-borderless table-vcenter">
                         <thead>
-                            <tr class="bg-body-dark">
-                                <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
-                                <th>ชื่อผู้สั่งซื้อ/ร้านค้า</th>
-                                <th>วันที่ซื้อ</th>
-                                <th>วันที่จัดส่ง</th>
-                                <th>จำนวนสินค้า</th>
-                                <th>จำนวนสินค้าเงินรวมทั้งสิ้น</th>
-                                {{-- <th class="d-none d-sm-table-cell">สถานะ</th> --}}
-                                <th class="text-center">เครื่องมือ</th>
-                            </tr>
+                        <tr class="bg-body-dark">
+                            <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
+                            <th>{{__('orders.name')}}</th>
+                            <th>{{__('orders.order_date')}}</th>
+                            <th>{{__('orders.shipping_date')}}</th>
+                            <th>{{__('orders.count_order_detail')}}</th>
+                            <th>{{__('orders.total')}}</th>
+                            <th>{{__('orders.sub_total')}}</th>
+                            <th>{{__('orders.vat')}}</th>
+                            <th>{{__('orders.discount')}}</th>
+                            {{-- <th class="d-none d-sm-table-cell">สถานะ</th> --}}
+                            <th class="text-center">{{__('lang.tools')}}</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if ($orders->isNotEmpty())
-                                @foreach ($orders as $order)
-                                    <tr>
-                                        <td class="d-none d-sm-table-cell text-center">
-                                            {{ $orders->firstItem() + $loop->index }}</td>
-                                        <td class="fw-semibold">
-                                            <a href="javascript:void(0)">{{ $order->name }}</a>
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $order->order_date }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $order->shipping_date }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ $order->amount }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ number_format($order->total - $order->discount, 2) }}
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="block-options">
-                                                <div class="dropdown">
-                                                    <button type="button" class="btn-block-option"
+                        @if ($orders->isNotEmpty())
+                            @foreach ($orders as $index => $order)
+                                <tr>
+                                    <td class="d-none d-sm-table-cell text-center">
+                                        {{ $orders->firstItem() + $loop->index }}</td>
+                                    <td class="fw-semibold">
+                                        <a href="javascript:void(0)">{{ $order->name }}</a>
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ $order->order_date }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ $order->shipping_date }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ get_count_order_detail($order->id) }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ number_format($order->total - $order->discount, 2) }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ number_format($order->total * (100 / 107), 2) }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ number_format($order->total - ($order->total * (100 / 107)), 2) }}
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        {{ number_format($order->discount, 2) }}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="block-options">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn-block-option"
                                                         data-bs-toggle="dropdown" aria-haspopup="true"
                                                         aria-expanded="false">
-                                                        <i class="fa fa-ellipsis-v"></i>
-                                                    </button>
-                                                    {{-- TODO --}}
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a href="{{ route('orders.show', ['order' => $order]) }}"
-                                                            class="dropdown-item">
-                                                            <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
-                                                        </a>
-                                                        <a href="{{ route('orders.edit', ['order' => $order]) }}"
-                                                            class="dropdown-item">
-                                                            <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
-                                                        </a>
-                                                        <a class="dropdown-item"  href="javascript:void(0)"
-                                                           onclick="deleteRecord('{{ $order->id }}')">
-                                                            <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ
-                                                        </a>
-                                                    </div>
+                                                    <i class="fa fa-ellipsis-v"></i>
+                                                </button>
+                                                {{-- TODO --}}
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a href="{{ route('orders.show', ['order' => $order]) }}"
+                                                       class="dropdown-item">
+                                                        <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
+                                                    </a>
+                                                    <a href="{{ route('orders.edit', ['order' => $order]) }}"
+                                                       class="dropdown-item">
+                                                        <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)"
+                                                       onclick="deleteRecord('{{ $order->id }}')">
+                                                        <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ
+                                                    </a>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>
@@ -117,9 +149,10 @@
         </div>
     </div>
 
-
 @endsection
-
+@include('components.select2-default')
+@include('orders.scripts.export-order-detail-script')
+@include('components.sweetalert')
 
 @push('scripts')
     <script>

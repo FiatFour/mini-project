@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrdersExport;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -10,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-
+use Maatwebsite\Excel\Facades\Excel;
 class OrderController extends Controller
 {
     /**
@@ -19,12 +20,18 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->keyword;
+        $id = $request->id;
+        $order_date = $request->order_date;
+        $shipping_date = $request->shipping_date;
+
 
         $orders = Order::select('*')
             ->search($request)
             ->paginate(5);
 
-        return view('orders.index', compact('orders', 'keyword'));
+        $d = Order::all();
+
+        return view('orders.index', compact('orders', 'keyword', 'd', 'id', 'order_date', 'shipping_date'));
     }
 
     /**
@@ -140,16 +147,16 @@ class OrderController extends Controller
 
             return redirect()->route('orders.index');
         }
-        $order_detail_list = OrderDetail::select('order_details.*', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
+        $order_detail_list = OrderDetail::select('order_details.*', 'products.category_id AS category_id', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
             ->latest('order_details.id')
             ->leftJoin('products', 'products.id',
                 'order_details.product_id')
             ->leftJoin('categories', 'categories.id',
-                'order_details.category_id')
+                'products.category_id')
             ->where('order_details.order_id', $order->id)
             ->get();
 
-        $page_title = __('manage.edit') . __('orders.page_title');
+        $page_title = __('manage.view') . __('orders.page_title');
         $view = true;
         return view('orders.form', compact('order', 'page_title', 'order_detail_list', 'view'));
     }
@@ -186,7 +193,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        dd('hi');
     }
 
     /**
@@ -247,4 +254,26 @@ class OrderController extends Controller
             'price' => $product->price,
         ]);
     }
+
+    public function export(Request $request)
+    {
+        $order_id = $request->order_id;
+
+        if(!empty($order_id)){
+            $order_list = Order::find($order_id)->first();
+            return Excel::download(new OrdersExport($order_list, true), 'template.xlsx');
+        }else{
+            $order_list = Order::select('*')->get();
+            return Excel::download(new OrdersExport($order_list), 'template.xlsx');
+        }
+
+//        $order_list = Order::select('orders.*')
+//            ->latest('orders.id')
+//            ->leftJoin('order_details', 'order_details.order_id',
+//                'orders.id')
+//            ->get();
+//        $count_detail = OrderDetail::where('order_id', $order_list->id)->get();
+//        dd($order_list);
+    }
+
 }

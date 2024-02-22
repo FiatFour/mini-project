@@ -1,5 +1,9 @@
 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
     <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">ข้อมูล{{ __('orders.shop') }}</h1>
+    <a href="#" type="button" class="btn btn-alt-success my-2" onclick="exportOrders()"
+       style="margin-right: 5px">
+        <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel
+    </a>
     <a href="{{ route('products.create') }}" type="button" class="btn btn-alt-danger my-2">
         <i class="fa fa-fw fa-plus me-1"></i> จัดพิมพ์ PDF
     </a>

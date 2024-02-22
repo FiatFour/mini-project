@@ -104,7 +104,7 @@
     </div>
 @endsection
 
-@include('components.select2-default')
+
 @include('components.sweetalert')
 @include('components.list-delete')
 @include('components.select2-ajax', [

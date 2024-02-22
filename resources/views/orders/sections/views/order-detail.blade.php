@@ -3,8 +3,8 @@
         <thead class="bg-body-dark">
             <th style="width: 2px;">#</th>
             <th style="width: 25%;">ชื่อ{{ __('products.page_title') }}</th>
-            <th style="width: 20%;">{{ __('categories.page_title') }}</th>
-            <th style="width: 30%;">{{ __('orders.price') }}</th>
+            <th style="width: 25%;">{{ __('categories.page_title') }}</th>
+            <th style="width: 15%;">{{ __('orders.price') }}</th>
             <th style="width: 10%;">{{ __('orders.amount') }}</th>
             <th style="width: 10%;">{{ __('orders.sub_total') }}</th>
             <th style="width: 10%;">{{ __('orders.total') }}</th>
@@ -17,7 +17,10 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $order_detail['product_name'] }}</td>
                         <td>{{ $order_detail['category_name'] }}</td>
-                        <td class="td-break" style="white-space: pre-wrap;">
+{{--                        <td class="td-break" style="white-space: pre-wrap;">--}}
+{{--                            {{ $order_detail['price'] }}--}}
+{{--                        </td>--}}
+                        <td>
                             {{ $order_detail['price'] }}
                         </td>
                         <td>{{ $order_detail['amount'] }}</td>

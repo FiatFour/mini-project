@@ -45,15 +45,17 @@ Route::middleware([
     // });
 
     //TODO
-    Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::resource('categories', App\Http\Controllers\CategoryController::class);
-    Route::resource('products', App\Http\Controllers\ProductController::class);
-    Route::resource('orders', App\Http\Controllers\OrderController::class);
+
     Route::get('/getProduct',[\App\Http\Controllers\OrderController::class, 'getProduct'])->name('orders.getProduct');
     Route::get('/get-price-category',[\App\Http\Controllers\OrderController::class, 'getPriceAndCategory'])->name('orders.getPriceAndCategory');
     Route::post('/orders/add-order-detail',[\App\Http\Controllers\OrderController::class, 'addOrderDetail'])->name('orders.addOrderDetail');
     Route::post('/orders/update-order-detail', 'OrderController@updateOrderDetail')->name('orders.updateOrderDetail');
+    Route::get('/orders/export', [\App\Http\Controllers\OrderController::class, 'export'])->name('orders.export-excel');
 
+    Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::resource('categories', App\Http\Controllers\CategoryController::class);
+    Route::resource('products', App\Http\Controllers\ProductController::class);
+    Route::resource('orders', App\Http\Controllers\OrderController::class);
 
     //Util Select2
     Route::name('util.')->prefix('util')->group(function () {
@@ -62,6 +64,9 @@ Route::middleware([
         Route::get('select2/prices', [Controllers\Util\Select2Controller::class, 'getPrices'])->name('select2.prices');
         Route::get('select2/categories', [Controllers\Util\Select2Controller::class, 'getCategories'])->name('select2.categories');
     });
+
+
+
     // Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
     //     Route::get('/categories', 'index')->name('categories.index');
     //     Route::get('/categories/create', 'create')->name('categories.create');

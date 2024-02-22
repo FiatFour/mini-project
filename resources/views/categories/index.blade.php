@@ -50,7 +50,7 @@
                         :optionals="['placeholder' => 'เลือก..']" /> --}}
                         {{-- <x-forms.select-status id="status" :selected="$status" :label="'เลือก' . __('categories.page_title')" :optionals="['form_label' => 'text-start col-form-label']"/> --}}
                         <x-forms.select id="status" :name="'name'" :items="$status_obj" :selected="$status"
-                            :label="'เลือก' . __('categories.page_title')" :optionals="['form_label' => 'text-start col-form-label']" />
+                            :label="'เลือก' . __('categories.status')" :optionals="['form_label' => 'text-start col-form-label']" />
 
                         {{-- <label class="text-start col-form-label" for="status">สถานะ</label>
                         <select class="form-select" id="status" name="status">
