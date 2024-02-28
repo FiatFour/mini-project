@@ -66,6 +66,15 @@ class OrderController extends Controller
             'shipping_date.required' => 'The shipping date field is required.',
         ]);
 
+        $validator->after(function ($validator) use ($request) {
+            $order_date = Carbon::createFromFormat('Y-m-d', $request->order_date);
+            $shipping_date = Carbon::createFromFormat('Y-m-d', $request->shipping_date);
+
+            if ($shipping_date->lte($order_date)) {
+                $validator->errors()->add('shipping_date', 'Shipping date must be greater than order date.');
+            }
+        });
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -115,16 +124,17 @@ class OrderController extends Controller
             $order->discount = $request->discount;
         }
 
-        if ($request->withholding_tax != null) {
-            $order->withholding_tax = true;
-            $orderTotal = $orderTotal * (100 / 103);
+        if ($request->withholding_tax != false) {
+            $order->withholding_tax = $orderTotal - ($orderTotal * (100 / 103));
         } else {
-            $order->withholding_tax = false;
+            $order->withholding_tax = 0;
         }
 
         $order->amount = $orderAmount;
-        $order->total = $orderTotal;
         $order->sub_total = ($orderAmount + $orderTotal) * (100 / 107);
+        $order->vat = $orderTotal - $order->sub_total;
+        $order->total = $orderTotal;
+
         $order->save();
 
 //        return response()->json([
@@ -181,6 +191,7 @@ class OrderController extends Controller
                 'products.category_id')
             ->where('order_details.order_id', $order->id)
             ->get();
+
 
         $page_title = __('manage.edit') . __('orders.page_title');
         $edit = true;

@@ -2,7 +2,6 @@
 
 @section('content')
     <section class="content">
-
         <form id="save-form">
 
             <x-blocks.block :title="__('orders.shop')" >
@@ -24,26 +23,26 @@
                             <label class="text-start col-form-label">
                                 ราคา (ไม่รวม VAT)
                             </label>
-                            <input disabled type="text" class="form-control col-sm-4" value="{{ number_format($order->total * (100 / 107), 2) }}">
+                            <input disabled type="text" class="form-control col-sm-4" value="{{ number_format($order->sub_total, 2) }}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 VAT 7%
                             </label>
                             <input disabled type="text" class="form-control col-sm-4"
-                                   value="{{ number_format($order->total - ($order->total * (100 / 107)), 2) }}">
+                                   value="{{ number_format($order->vat, 2) }}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 จำนวนเงินรวมทั้งสิ้น
                             </label>
-                            <input disabled type="text" class="form-control col-sm-4" value="{{number_format($order->total - $order->discount, 2)}}">
+                            <input disabled type="text" class="form-control col-sm-4" value="{{number_format($order->total - ($order->withholding_tax + $order->discount), 2)}}">
                         </div>
                         <div class="col-3">
                             <label class="text-start col-form-label">
                                 ส่วนลด
                             </label>
-                            <input type="text" class="form-control col-sm-4" id="discount" name="discount" value="{{ number_format($order->discount != 0 ? $order->discount : null, 2) }}">
+                            <input type="text" class="form-control col-sm-4" id="discount" name="discount" value="{{ $order->discount != 0 ? $order->discount : null }}" placeholder="0.00">
                         </div>
                     </div>
 
@@ -52,7 +51,7 @@
                     </label>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="withholding_tax"
-                               name="withholding_tax" {{$order->withholding_tax != false ? 'checked' : ''}}>
+                               name="withholding_tax" {{$order->withholding_tax != 0 ? 'checked' : ''}}>
                         <label class="form-check-label" for="taxCheckbox">หักภาษี ณ ที่จ่าย 3 %</label>
                     </div>
                 </div>
@@ -60,18 +59,10 @@
 
             <div class="row">
                 <input type="hidden" name="order_id" id="order_id" value="{{ $order->id }}">
-                <div class="col-12 text-end">
-                    <a href="{{ route('orders.index') }}"
-                       class="btn btn-secondary btn-custom-size me-2">{{ __('manage.back') }}</a>
-                    @if (!isset($view))
-                        <button type="button" id="btnOrderSave"
-                                class="btn btn-primary btn-custom-size btn-save-form">{{ __('manage.save') }}</button>
-                    @endif
-                </div>
+                <x-forms.submit-group :optionals="['url' => 'orders.index', 'view' => empty($view) ? null : $view]" />
             </div>
 
         </form>
-
     </section>
 @endsection
 
@@ -108,7 +99,6 @@
 {{--    'modal' => '#modal-order-detail',--}}
 {{--    'url' => route('util.select2.prices'),--}}
 {{--])--}}
-
 
 @push('scripts')
     <script>

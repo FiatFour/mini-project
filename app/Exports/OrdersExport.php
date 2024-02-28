@@ -71,6 +71,7 @@ class OrdersExport implements FromView, WithStyles
                 'I1' => $red_bg,
                 'J1' => $red_bg,
                 'K1' => $red_bg,
+                'L1' => $red_bg,
             ];
         }else{
             return [
@@ -84,6 +85,7 @@ class OrdersExport implements FromView, WithStyles
                 'G1' => $red_bg,
                 'H1' => $red_bg,
                 'I1' => $red_bg,
+                'J1' => $red_bg,
             ];
         }
 

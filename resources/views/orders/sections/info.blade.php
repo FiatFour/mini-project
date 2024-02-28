@@ -40,13 +40,12 @@
     <div class="row mb-4">
         <div class="col-3">
             <x-forms.input id="order_date" :value="$order->order_date" :label="'วันที่สั่งซื้อ'"
-                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d']"/>
         </div>
 
         <div class="col-3">
             <x-forms.input id="shipping_date" :value="$order->shipping_date" :label="'วันที่จัดส่ง'"
-                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d']"/>
         </div>
     </div>
 </div>
-

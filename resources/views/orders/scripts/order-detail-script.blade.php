@@ -76,11 +76,10 @@
                     var amount = document.getElementById("amount_field").value;
                     var product_id = document.getElementById("product_field").value;
                     var product_name = (product_id) ? document.getElementById('product_field').selectedOptions[0].text : '';
-                    // var category_id = document.getElementById("category_field").value;
+                    // var category_id = document.gsetElementById("category_field").value;
                     // var category_name = (category_id) ? document.getElementById('category_field').selectedOptions[0].text : '';
                     // var category_name = (category_id) ? document.getElementById('category_field').text : '';
                     var category_name = document.getElementById("category_field").value;
-                    console.log(category_name);
                     // var price = (price_field) ? document.getElementById('price_field').selectedOptions[0].text : '';
                     // var price = (price_field) ? document.getElementById('price_field').selectedOptions[0].text : '';
                     var price = document.getElementById("price_field").value;
@@ -131,8 +130,10 @@
                 getNumberWithCommas(x) {
                     return numberWithCommas(x);
                 },
+                getToFixed(x) {
+                    return x.toFixed(2);
+                },
             },
-
             props: ['title'],
         });
         addOrderDetailVue.display();

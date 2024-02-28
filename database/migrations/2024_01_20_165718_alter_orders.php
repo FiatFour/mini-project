@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('orders', function(Blueprint $table){
             $table->integer('amount')->nullable();
-            $table->double('sub_total', 10,2)->nullable();
+//            $table->double('sub_total', 10,2)->nullable();
             $table->double('total', 10,2)->nullable();
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
     {
         Schema::table('orders', function(Blueprint $table){
             $table->dropColumn('amount');
-            $table->dropColumn('sub_total');
+//            $table->dropColumn('sub_total');
             $table->dropColumn('total');
         });
     }

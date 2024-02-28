@@ -10,13 +10,14 @@
         <th>จำนวนสินค้าเงินรวมทั้งสิ้น(ไม่รวม VAT)</th>
         <th>ราคา VAT 7%</th>
         <th>ส่วนลด</th>
+        <th>ราคาหักภาษี ณ ที่จ่าย 3 %</th>
     </tr>
     </thead>
     <tbody>
     @foreach ($orders as $index => $order)
         <tr>
             <td>
-                {{ $index + 1 }}</td>
+                {{ $index + 1 }}
             <td>
                 {{ $order->name }}
             </td>
@@ -30,16 +31,19 @@
                 {{ get_count_order_detail($order->id) }}
             </td>
             <td>
-                {{ number_format($order->total - $order->discount, 2) }}
+                {{ number_format($order->total - ($order->withholding_tax + $order->discount), 2) }}
             </td>
             <td>
-                {{ number_format($order->total * (100 / 107), 2) }}
+                {{ number_format($order->sub_total, 2) }}
             </td>
             <td>
-                {{ number_format($order->total - ($order->total * (100 / 107)), 2) }}
+                {{ number_format($order->vat, 2) }}
             </td>
             <td>
                 {{ number_format($order->discount, 2) }}
+            </td>
+            <td>
+                {{ number_format($order->withholding_tax, 2) }}
             </td>
         </tr>
     @endforeach

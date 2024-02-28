@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignUuid('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->integer('amount');
-            $table->double('sub_total',10,2);
             $table->double('total',10,2);
             $table->timestamps();
         });

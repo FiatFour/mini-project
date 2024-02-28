@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function(Blueprint $table){
-            $table->double('discount',10,2)->default(0);
-//            $table->boolean('withholding_tax')->default(false);
+            $table->double('withholding_tax',10,2)->default(0);
+            $table->double('sub_total', 10,2)->nullable();
+            $table->double('vat', 10,2)->nullable();
         });
     }
 
@@ -23,8 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function(Blueprint $table){
-            $table->dropColumn('discount');
-//            $table->dropColumn('withholding_tax');
+            $table->dropColumn('withholding_tax');
+            $table->dropColumn('sub_total');
+            $table->dropColumn('vat');
         });
     }
 };

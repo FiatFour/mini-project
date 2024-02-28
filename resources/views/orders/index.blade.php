@@ -97,13 +97,13 @@
                                         {{ get_count_order_detail($order->id) }}
                                     </td>
                                     <td class="d-none d-sm-table-cell">
-                                        {{ number_format($order->total - $order->discount, 2) }}
+                                        {{ number_format($order->total - ($order->withholding_tax + $order->discount), 2) }}
                                     </td>
                                     <td class="d-none d-sm-table-cell">
-                                        {{ number_format($order->total * (100 / 107), 2) }}
+                                        {{ number_format($order->sub_total, 2) }}
                                     </td>
                                     <td class="d-none d-sm-table-cell">
-                                        {{ number_format($order->total - ($order->total * (100 / 107)), 2) }}
+                                        {{ number_format($order->vat, 2) }}
                                     </td>
                                     <td class="d-none d-sm-table-cell">
                                         {{ number_format($order->discount, 2) }}

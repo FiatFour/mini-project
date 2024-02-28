@@ -14,12 +14,12 @@
         <table class="table table-striped">
             <thead class="bg-body-dark">
                 <th style="width: 2px;">#</th>
-                <th style="width: 25%;">ชื่อ{{ __('products.page_title') }}</th>
-                <th style="width: 20%;">{{ __('categories.page_title') }}</th>
-                <th style="width: 30%;">{{ __('orders.price') }}</th>
+                <th style="width: 15%;">ชื่อ{{ __('products.page_title') }}</th>
+                <th style="width: 15%;">{{ __('categories.page_title') }}</th>
+                <th style="width: 10%;">{{ __('orders.price') }}</th>
                 <th style="width: 10%;">{{ __('orders.amount') }}</th>
-                <th style="width: 10%;">{{ __('orders.sub_total') }}</th>
-                <th style="width: 10%;">{{ __('orders.total') }}</th>
+                <th style="width: 25%;">{{ __('orders.sub_total') }}</th>
+                <th style="width: 25%;">{{ __('orders.total') }}</th>
                 <th class="sticky-col text-center">{{ __('manage.tools') }}</th>
             </thead>
             <tbody v-if="order_detail_list.length > 0">
@@ -29,6 +29,7 @@
                     <td>@{{ item.category_name }}</td>
                     <td class="td-break" style="white-space: pre-wrap;">@{{ item.price }}</td>
                     <td>@{{ item.amount }}</td>
+{{--                    <td>@{{ getNumberWithCommas(getToFixed(item.total * (100 / 107))) }}</td>--}}
                     <td>@{{ getNumberWithCommas(item.sub_total) }}</td>
                     <td>@{{ getNumberWithCommas(item.total) }}</td>
                     <td class="sticky-col text-center">

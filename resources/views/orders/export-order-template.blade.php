@@ -13,44 +13,48 @@
             <th>จำนวนสินค้าเงินรวมทั้งสิ้น(ไม่รวม VAT)</th>
             <th>ราคา VAT 7%</th>
             <th>ส่วนลด</th>
+            <th>ราคาหักภาษี ณ ที่จ่าย 3 %</th>
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    {{ $d->shop_code }}
-                </td>
-                <td>
-                    {{ $d->name }}
-                </td>
-                <td>
-                    {{ $d->phone }}
-                </td>
-                <td>
-                    {{ $d->address }}
-                </td>
-                <td>
-                    {{ $d->order_date }}
-                </td>
-                <td>
-                    {{ $d->shipping_date }}
-                </td>
-                <td>
-                    {{ get_count_order_detail($d->id) }}
-                </td>
-                <td>
-                    {{ number_format($d->total - $d->discount, 2) }}
-                </td>
-                <td>
-                    {{ number_format($d->total * (100 / 107), 2) }}
-                </td>
-                <td>
-                    {{ number_format($d->total - ($d->total * (100 / 107)), 2) }}
-                </td>
-                <td>
-                    {{ number_format($d->discount, 2) }}
-                </td>
-            </tr>
+        <tr>
+            <td>
+                {{ $d->shop_code }}
+            </td>
+            <td>
+                {{ $d->name }}
+            </td>
+            <td>
+                {{ $d->phone }}
+            </td>
+            <td>
+                {{ $d->address }}
+            </td>
+            <td>
+                {{ $d->order_date }}
+            </td>
+            <td>
+                {{ $d->shipping_date }}
+            </td>
+            <td>
+                {{ get_count_order_detail($d->id) }}
+            </td>
+            <td>
+                {{ number_format($d->total - ($d->withholding_tax + $d->discount), 2) }}
+            </td>
+            <td>
+                {{ number_format($d->sub_total, 2) }}
+            </td>
+            <td>
+                {{ number_format($d->vat, 2) }}
+            </td>
+            <td>
+                {{ number_format($d->discount, 2) }}
+            </td>
+            <td>
+                {{ number_format($d->withholding_tax, 2) }}
+            </td>
+        </tr>
         </tbody>
     @else
         <thead>
@@ -64,6 +68,7 @@
             <th>จำนวนสินค้าเงินรวมทั้งสิ้น(ไม่รวม VAT)</th>
             <th>ราคา VAT 7%</th>
             <th>ส่วนลด</th>
+            <th>ราคาหักภาษี ณ ที่จ่าย 3 %</th>
         </tr>
         </thead>
         <tbody>
@@ -84,16 +89,19 @@
                     {{ get_count_order_detail($order->id) }}
                 </td>
                 <td>
-                    {{ number_format($order->total - $order->discount, 2) }}
+                    {{ number_format($order->total - ($order->withholding_tax + $order->discount), 2) }}
                 </td>
                 <td>
-                    {{ number_format($order->total * (100 / 107), 2) }}
+                    {{ number_format($order->sub_total, 2) }}
                 </td>
                 <td>
-                    {{ number_format($order->total - ($order->total * (100 / 107)), 2) }}
+                    {{ number_format($order->vat, 2) }}
                 </td>
                 <td>
                     {{ number_format($order->discount, 2) }}
+                </td>
+                <td>
+                    {{ number_format($order->withholding_tax, 2) }}
                 </td>
             </tr>
         @endforeach

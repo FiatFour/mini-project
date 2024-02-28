@@ -73,6 +73,15 @@ class ProductController extends Controller
             'exp_date' => __('products.exp_date'),
         ]);
 
+        $validator->after(function ($validator) use ($request) {
+            $mfg_date = Carbon::createFromFormat('Y-m-d', $request->mfg_date);
+            $exp_date = Carbon::createFromFormat('Y-m-d', $request->exp_date);
+
+            if ($exp_date->lte($mfg_date)) {
+                $validator->errors()->add('exp_date', "EXP date can not be less than MFG date");
+            }
+        });
+
         //TODO
         // $validator->stopOnFirstFailure()->fails()
         if ($validator->fails()) {
@@ -84,17 +93,17 @@ class ProductController extends Controller
         }
 
         // Starting date must be greater than current date
-        if (!empty($request->mfg_date)) {
-            $mfgDate = Carbon::createFromFormat('Y-m-d', $request->mfg_date);
-            $expDate = Carbon::createFromFormat('Y-m-d', $request->exp_date);
-
-            if ($expDate->lte($mfgDate) == true) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => ['exp_date' => "EXP date can not be less than MFG date"]
-                ]);
-            }
-        }
+//        if (!empty($request->mfg_date)) {
+//            $mfgDate = Carbon::createFromFormat('Y-m-d', $request->mfg_date);
+//            $expDate = Carbon::createFromFormat('Y-m-d', $request->exp_date);
+//
+//            if ($expDate->lte($mfgDate) == true) {
+//                return response()->json([
+//                    'success' => false,
+//                    'errors' => ['exp_date' => "EXP date can not be less than MFG date"]
+//                ]);
+//            }
+//        }
 
         $product = Product::firstOrNew(['id' => $request->id]);
         $product->name = $request->name;
