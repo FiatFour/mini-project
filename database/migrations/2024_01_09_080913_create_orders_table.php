@@ -21,6 +21,15 @@ return new class extends Migration
             $table->string('address');
             $table->date('order_date');
             $table->date('shipping_date');
+
+            $table->integer('amount')->nullable();
+            $table->double('total', 10,2)->nullable();
+            $table->double('discount',10,2)->default(0);
+            $table->string('shop_code');
+            $table->double('withholding_tax',10,2)->default(0);
+            $table->double('sub_total', 10,2)->nullable();
+            $table->double('vat', 10,2)->nullable();
+
             $table->timestamps();
         });
     }

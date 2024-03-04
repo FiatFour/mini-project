@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -26,7 +27,7 @@ class OrderController extends Controller
 
 
         $orders = Order::select('*')
-            ->search($request)
+            ->search($request->s, $request)
             ->paginate(5);
 
         $d = Order::all();
@@ -110,7 +111,7 @@ class OrderController extends Controller
             $ord->order_id = $order->id;
             $ord->product_id = $orderDetail['product_id'];
 //                $ord->category_id = $orderDetail['category_id'];
-            $ord->amount = $orderDetail['amount'];
+//            $ord->amount = $orderDetail['amount'];
             $ord->sub_total = $orderDetail['sub_total'];
             $ord->total = $orderDetail['total'];
             $ord->save();
@@ -285,6 +286,21 @@ class OrderController extends Controller
 //            ->get();
 //        $count_detail = OrderDetail::where('order_id', $order_list->id)->get();
 //        dd($order_list);
+    }
+
+    public function printOrderDetailsPdf(Request $request){
+        $pdf = Pdf::loadView('orders.pdfs.order-detail.pdf'
+        );
+// (Optional) Setup the paper size and orientation
+        return  $pdf->stream();
+
+//        $pdf = PDF::loadView(
+//            'orders.pdfs.purchase-order.pdf',
+//            [
+//                'd' => $install_equipment_po,
+//                'install_equipment_po_lines' => $install_equipment_po_lines,
+//                'summary' => $summary,
+//        );
     }
 
 }

@@ -47,12 +47,12 @@ class CategoryController extends Controller
 
         $status_obj = collect([
             (object)[
-                'status' => 'yes',
-                'name' => 'ใช้งาน',
+                'status' => 0, // Bug
+                'name' => 'ไม่ได้ใช้งาน',
             ],
             (object)[
-                'status' => 'no',
-                'name' => 'ไม่ได้ใช้งาน',
+                'status' => 1,
+                'name' => 'ใช้งาน',
             ]
         ]);
 
@@ -98,6 +98,8 @@ class CategoryController extends Controller
 //                'message' => $validator->getMessageBag()->first()
             ]);
         }
+//        dd($request->status);
+
 
         $category = Category::firstOrNew(['id' => $request->id]);
         $category->code = $request->code;

@@ -53,7 +53,7 @@
                             <th>{{ __('users.username') }}</th>
                             <th>{{ __('users.name') }}</th>
                             <th class="d-none d-sm-table-cell">{{ __('users.email') }}</th>
-                            <th class="text-center">{{ __('manage.tool') }}</th>
+                            <th class="text-center">{{ __('manage.tools') }}</th>
                         </tr>
                         </thead>
                         <tbody>

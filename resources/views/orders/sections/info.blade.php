@@ -4,7 +4,7 @@
        style="margin-right: 5px">
         <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel
     </a>
-    <a href="{{ route('products.create') }}" type="button" class="btn btn-alt-danger my-2">
+    <a href="{{ route('orders.print-detail-pdf') }}" type="button" class="btn btn-alt-danger my-2">
         <i class="fa fa-fw fa-plus me-1"></i> จัดพิมพ์ PDF
     </a>
 </div>

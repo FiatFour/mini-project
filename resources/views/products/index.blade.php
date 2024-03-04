@@ -24,11 +24,12 @@
                                                    :label="__('products.page_title')" />
                     </div>
                     <div class="col-3">
-                        <x-forms.select-option id="categoryId" :value="$categoryId" :list="$categories"
-                                               :label="__('categories.page_title')" />
 
-{{--                        <x-forms.select id="categoryId" :name="'categoryName'" :items="$categories" :selected="$categoryId"--}}
-{{--                            :label="'ชื่อ' . __('categories.page_title')" :optionals="['placeholder' => 'เลือก..']" />--}}
+
+{{--                        <x-forms.select-option id="category_id" :value="$category_id" :list="$categories"--}}
+{{--                                               :label="__('categories.page_title')" />--}}
+                        <x-forms.select id="category_id" :name="'name'" :items="$categories" :selected="$category_id"
+                                        :label="__('categories.page_title')" :optionals="['placeholder' => 'เลือก..']" />
                     </div>
                     <div class="col-3">
                         <x-forms.input id="exp_date" :value="$exp_date" :label="'วันหมดอายุ'" :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>

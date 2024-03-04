@@ -20,7 +20,7 @@ class ProductController extends Controller
     {
         $name = $request->name;
         $exp_date = $request->exp_date;
-        $categoryId = $request->categoryId;
+        $category_id = $request->category_id;
         $product_id = $request->product_id;
         $s = $request->s;
         $products = Product::select('products.*', 'categories.name AS categoryName')
@@ -29,14 +29,14 @@ class ProductController extends Controller
                 'categories', 'categories.id',
                 'products.category_id'
             )
-            ->search($request->s, $request)->paginate(PER_PAGE);
+                ->search($request->s, $request)->paginate(PER_PAGE);
 
         $products2 = Product::all();
 
-        $categories = Category::select('name', 'id', 'name AS categoryName', 'id AS categoryId')->get();
+        $categories = Category::select('name', 'id', 'name AS category_name', 'id AS category_id')->get();
         // dd($products);
         // dd($categories);
-        return view('products.index', compact('products', 'products2', 's', 'name', 'exp_date', 'categories', 'categoryId', 'product_id'));
+        return view('products.index', compact('products', 'products2', 's', 'name', 'exp_date', 'categories', 'category_id', 'product_id'));
     }
 
     /**

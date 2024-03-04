@@ -52,6 +52,9 @@ Route::middleware([
     Route::post('/orders/update-order-detail', 'OrderController@updateOrderDetail')->name('orders.updateOrderDetail');
     Route::get('/orders/export', [\App\Http\Controllers\OrderController::class, 'export'])->name('orders.export-excel');
 
+    Route::get('/orders/export-detail-pdf', [\App\Http\Controllers\OrderController::class, 'printOrderDetailsPdf'])->name('orders.print-detail-pdf');
+
+
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::resource('categories', App\Http\Controllers\CategoryController::class);
     Route::resource('products', App\Http\Controllers\ProductController::class);

@@ -100,7 +100,7 @@
                                             {{ $category->name }}
                                         </td>
                                         <td class="d-none d-sm-table-cell">
-                                            @if ($category->status == 'yes')
+                                            @if ($category->status == 1)
                                                 ใช้งาน
                                             @else
                                                 ไม่ได้ใช้งาน
