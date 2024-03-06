@@ -31,11 +31,9 @@ class ProductController extends Controller
             )
                 ->search($request->s, $request)->paginate(PER_PAGE);
 
-        $products2 = Product::all();
+        $products2 = Product::select('id', 'name');
 
         $categories = Category::select('name', 'id', 'name AS category_name', 'id AS category_id')->get();
-        // dd($products);
-        // dd($categories);
         return view('products.index', compact('products', 'products2', 's', 'name', 'exp_date', 'categories', 'category_id', 'product_id'));
     }
 
@@ -44,7 +42,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-        // $productGenes = ProductGene::orderBy('name', 'ASC')->get();
         $product = new Product();
         $categories = Category::select('name', 'id', 'name AS categoryName', 'id AS categoryId')->orderBy('categoryName', 'ASC')->get();
         $page_title = __('manage.add') . __('products.page_title');
@@ -57,7 +54,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => [
                 'required', 'string',
@@ -85,25 +81,8 @@ class ProductController extends Controller
         //TODO
         // $validator->stopOnFirstFailure()->fails()
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-                // 'message' => $validator->getMessageBag()->first()
-            ]);
+            return $this->responseValidateAllFailed($validator);
         }
-
-        // Starting date must be greater than current date
-//        if (!empty($request->mfg_date)) {
-//            $mfgDate = Carbon::createFromFormat('Y-m-d', $request->mfg_date);
-//            $expDate = Carbon::createFromFormat('Y-m-d', $request->exp_date);
-//
-//            if ($expDate->lte($mfgDate) == true) {
-//                return response()->json([
-//                    'success' => false,
-//                    'errors' => ['exp_date' => "EXP date can not be less than MFG date"]
-//                ]);
-//            }
-//        }
 
         $product = Product::firstOrNew(['id' => $request->id]);
         $product->name = $request->name;
@@ -114,11 +93,6 @@ class ProductController extends Controller
         $product->detail = $request->detail;
         $product->save();
 
-//        return response()->json([
-//            'success' => true,
-//            'redirect' => route('products.index'),
-//        ]);
-
         $redirect_route = route('products.index');
         return $this->responseValidateSuccess($redirect_route);
     }
@@ -126,9 +100,6 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         if ($product == null) {
-            $message = 'product not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('products.index');
         }
 
@@ -141,9 +112,6 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         if ($product == null) {
-            $message = 'product not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('products.index');
         }
 
@@ -159,20 +127,10 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if (empty($product)) {
-            Session::flash('error', 'Product not found');
-            return response()->json([
-                'success' => false,
-                'message' => 'Product not found'
-            ]);
+            return $this->responseEmpty('Product');
         }
 
         $product->delete();
-
-        Session::flash('success', 'Product deleted successfully');
-        return response()->json([
-            'success' => true,
-            'message' => 'Product deleted successfully',
-            'redirect' => route('products.index')
-        ]);
+        return $this->responseDeletedSuccess('Product', products.index);
     }
 }

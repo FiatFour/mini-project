@@ -8,7 +8,7 @@
             </div>
             <div class="form-check form-check-inline mt-1">
                 <input class="form-check-input {{ $input_class }}" type="radio" id="{{ $id }}" name="{{ $id }}" value="0"
-                {{ $value == 0 ? 'checked' : '' }}>
+                {{ $value == 2 ? 'checked' : '' }}>
                 <label class="form-check-label" for="{{ $id }}">ไม่ใช้งาน</label>
             </div>
         </div>

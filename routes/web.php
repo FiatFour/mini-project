@@ -24,32 +24,11 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    // Route::get('/users', function () {
-    //     return view('users/index');
-    // })->name('users.index');
-
-    // Route::get('/users/create', function () {
-    //     return view('users/create');
-    // })->name('users.create');
     Route::get('/singout', [LoginController::class, 'logout'])->name('singout');
 
-    // Route::controller(App\Http\Controllers\UserController::class)->group(function () {
-    //     Route::get('/users', 'index')->name('users.index');
-    //     Route::get('/users/create', 'create')->name('users.create');
-    //     Route::post('/users', 'store')->name('users.store');
-
-    //     Route::get('/users/edit/{id}', 'edit')->name('users.edit');
-    //     Route::get('/users/view/{id}', 'view')->name('users.view');
-    //     Route::put('/users/{id}', 'update')->name('users.update');
-    //     Route::delete('/users/{id}', 'destroy')->name('users.delete');
-    // });
-
-    //TODO
-
-    Route::get('/getProduct',[\App\Http\Controllers\OrderController::class, 'getProduct'])->name('orders.getProduct');
-    Route::get('/get-price-category',[\App\Http\Controllers\OrderController::class, 'getPriceAndCategory'])->name('orders.getPriceAndCategory');
-    Route::post('/orders/add-order-detail',[\App\Http\Controllers\OrderController::class, 'addOrderDetail'])->name('orders.addOrderDetail');
-    Route::post('/orders/update-order-detail', 'OrderController@updateOrderDetail')->name('orders.updateOrderDetail');
+    Route::get('/price-category', [\App\Http\Controllers\OrderController::class, 'getPriceAndCategory'])->name('orders.getPriceAndCategory');
+    Route::post('/orders/add-order-detail', [\App\Http\Controllers\OrderController::class, 'addOrderDetail'])->name('orders.addOrderDetail');
+    Route::post('/orders/update-order-detail', [\App\Http\Controllers\OrderController::class, 'updateOrderDetail'])->name('orders.updateOrderDetail');
     Route::get('/orders/export', [\App\Http\Controllers\OrderController::class, 'export'])->name('orders.export-excel');
 
     Route::get('/orders/export-detail-pdf', [\App\Http\Controllers\OrderController::class, 'printOrderDetailsPdf'])->name('orders.print-detail-pdf');
@@ -67,17 +46,4 @@ Route::middleware([
         Route::get('select2/prices', [Controllers\Util\Select2Controller::class, 'getPrices'])->name('select2.prices');
         Route::get('select2/categories', [Controllers\Util\Select2Controller::class, 'getCategories'])->name('select2.categories');
     });
-
-
-
-    // Route::controller(App\Http\Controllers\CategoryController::class)->group(function () {
-    //     Route::get('/categories', 'index')->name('categories.index');
-    //     Route::get('/categories/create', 'create')->name('categories.create');
-    //     Route::post('/categories', 'store')->name('categories.store');
-
-    //     Route::get('/categories/edit/{id}', 'edit')->name('categories.edit');
-    //     Route::get('/categories/view/{id}', 'view')->name('categories.view');
-    //     Route::put('/categories/{id}', 'update')->name('categories.update');
-    //     Route::delete('/categories/{id}', 'destroy')->name('categories.delete');
-    // });
 });

@@ -37,17 +37,10 @@
                     $("#price_field").val(temp.price);
                     $("#order_id_field").val(temp.order_id);
                     $("#id_field").val(temp.id);
-                    //$("#province_field").val(temp.province_id).change();
 
                     if (temp.product_id) {
                         set_select2($("#product_field"), temp.product_id, temp.product_name);
                     }
-                    // if (temp.category_id) {
-                    //     set_select2($("#category_field"), temp.category_id, temp.category_name);
-                    // }
-                    // if (temp.price) {
-                    //     set_select2($("#price_field"), temp.price, temp.price);
-                    // }
                 },
                 openModal: function () {
                     $("#modal-order-detail").modal("show");
@@ -76,25 +69,17 @@
                     var amount = document.getElementById("amount_field").value;
                     var product_id = document.getElementById("product_field").value;
                     var product_name = (product_id) ? document.getElementById('product_field').selectedOptions[0].text : '';
-                    // var category_id = document.gsetElementById("category_field").value;
-                    // var category_name = (category_id) ? document.getElementById('category_field').selectedOptions[0].text : '';
-                    // var category_name = (category_id) ? document.getElementById('category_field').text : '';
                     var category_name = document.getElementById("category_field").value;
-                    // var price = (price_field) ? document.getElementById('price_field').selectedOptions[0].text : '';
-                    // var price = (price_field) ? document.getElementById('price_field').selectedOptions[0].text : '';
                     var price = document.getElementById("price_field").value;
-                    // var order_id = document.getElementById("order_id_field").value;
                     var id = document.getElementById("id_field").value;
                     return {
                         amount: amount,
                         product_id: product_id,
                         product_name: product_name,
-                        // category_id: category_id,
                         category_name: category_name,
                         price: price,
                         sub_total: ((price * amount) * (100 / 107)).toFixed(2),
                         total: (price * amount).toFixed(2),
-                        // order_id: order_id,
                         id: id
                     };
                 },

@@ -11,8 +11,8 @@
             <form action="" method="GET">
                 <div class="row mb-4">
                     <div class="col-3">
-                        <x-forms.input id="s" :value="$s" :label="'คำค้นหา'"
-                                       :optionals="['placeholder' => 'ใส่คำค้นหา']"/>
+                        <x-forms.input id="s" :value="$s" :label="__('lang.search_label')"
+                                       :optionals="['placeholder' => __('lang.input_search')]"/>
                     </div>
                     <div class="col-3">
                         <x-forms.select-option id="username" :value="$username" :list="$users2"
@@ -22,23 +22,13 @@
                         <x-forms.select-option id="name" :value="$name" :list="$users2"
                                                :label="__('users.name')"/>
                     </div>
-
                     @include('components.btns.search')
-{{--                    <div class="col-3 mt-4">--}}
-{{--                        <span class="d-flex flex-row justify-content-end" style="margin-top: 10px">--}}
-{{--                                <a href="{{ route('users.index') }}" class="btn btn-secondary d-flex align-items-center"--}}
-{{--                                   style="margin-left: 4%; width: 100px;">ล้างข้อมูล</a>--}}
-{{--                                <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>--}}
-{{--                        </span>--}}
-{{--                    </div>--}}
                 </div>
             </form>
         </div>
 
-        <!-- All Customer -->
         <div class="block block-rounded">
             <div class="block-content">
-                <!-- All Customer Table -->
                 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                     <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3"></h1>
                     <a href="{{ route('users.create') }}" type="button" class="btn btn-alt-primary my-2">
@@ -82,6 +72,12 @@
                                     </td>
                                 </tr>
                             @endforeach
+                        @else
+                            <tr class="table-empty">
+                                <td class="text-center" colspan="8">“
+                                    {{ __('manage.no_list') }} “
+                                </td>
+                            </tr>
                         @endif
                         </tbody>
                     </table>
@@ -92,7 +88,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @include('components.select2-default')
@@ -103,105 +98,3 @@
     'url' => route('util.select2.users'),
     'parent_id' => 'name',
 ])
-
-{{--@push('scripts')--}}
-{{--    <script>--}}
-{{--        function deleteRecord(id) {--}}
-{{--            var url = "{{ route('users.destroy', 'ID') }}"--}}
-{{--            var newUrl = url.replace('ID', id)--}}
-{{--            Swal.fire({--}}
-{{--                title: "ยืนยันลบข้อมูล",--}}
-{{--                text: "ต้องการลบข้อมูลใช่หรือไม่?",--}}
-{{--                icon: "warning",--}}
-{{--                showCancelButton: true,--}}
-{{--                confirmButtonColor: "#d33",--}}
-{{--                cancelButtonColor: "#767E88",--}}
-{{--                cancelButtonText: "ยกเลิก",--}}
-{{--                confirmButtonText: "ยืนยัน"--}}
-{{--            }).then((result) => {--}}
-{{--                if (result.isConfirmed) {--}}
-{{--                    axios.delete(newUrl).then(response => {--}}
-{{--                        if (response.data.success) {--}}
-{{--                            Swal.fire({--}}
-{{--                                title: "สำเร็จ",--}}
-{{--                                text: "{{ __('manage.store_success_message') }}",--}}
-{{--                                icon: "success",--}}
-{{--                                showCancelButton: false,--}}
-{{--                                confirmButtonColor: "btn btn-success",--}}
-{{--                                confirmButtonText: "ตกลง"--}}
-{{--                            }).then(value => {--}}
-{{--                                if (response.data.redirect) {--}}
-{{--                                    window.location.href = response.data.redirect;--}}
-{{--                                }--}}
-{{--                            });--}}
-{{--                        } else {--}}
-{{--                            Swal.fire({--}}
-{{--                                title: "เกิดข้อผิดพลาด",--}}
-{{--                                text: response.data.message,--}}
-{{--                                icon: "error",--}}
-{{--                                showCancelButton: false,--}}
-{{--                                confirmButtonColor: "btn btn-danger",--}}
-{{--                                confirmButtonText: "ตกลง"--}}
-{{--                            }).then(value => {--}}
-{{--                                if (value) {--}}
-{{--                                    //--}}
-{{--                                }--}}
-{{--                            });--}}
-{{--                        }--}}
-{{--                    }).catch(error => {--}}
-{{--                        Swal.fire({--}}
-{{--                            title: "เกิดข้อผิดพลาดaa",--}}
-{{--                            text: response.data.message,--}}
-{{--                            icon: "error",--}}
-{{--                            showCancelButton: false,--}}
-{{--                            confirmButtonColor: "btn btn-danger",--}}
-{{--                            confirmButtonText: "ตกลง"--}}
-{{--                        }).then(value => {--}}
-{{--                            if (value) {--}}
-{{--                                //--}}
-{{--                            }--}}
-{{--                        });--}}
-{{--                    });--}}
-{{--                }--}}
-{{--            });--}}
-{{--        }--}}
-{{--    </script>--}}
-{{--@endpush--}}
-
-{{-- @section('customJs')
-    @include('layouts.message')
-
-    <script>
-        function deleteRecord(id) {
-            var url = "{{ route('users.destroy', 'ID') }}"
-            var newUrl = url.replace('ID', id)
-            Swal.fire({
-                title: "ยืนยันลบข้อมูล",
-                text: "ต้องการลบข้อมูลใช่หรือไม่?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#767E88",
-                cancelButtonText: "ยกเลิก",
-                confirmButtonText: "ยืนยัน"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: newUrl,
-                        type: 'delete',
-                        data: {},
-                        dataType: 'json',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(response) {
-                            if (response['status']) {
-                                window.location.href = "{{ route('users.index') }}";
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    </script>
-@endsection --}}

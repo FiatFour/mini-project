@@ -35,6 +35,8 @@ return [
     'search_label' => 'คำค้นหา',
     'search_placeholder' => 'ระบุคำที่ต้องการ',
     'search' => 'ค้นหา',
+    'select' => 'ค้นหา',
+    'input_search' => 'ใส่ค้นหา',
     'clear_search' => 'ล้างค่า',
     'tools' => 'เครื่องมือ',
     'edit' => 'แก้ไข',
@@ -119,6 +121,7 @@ return [
     'only_number' => 'ต้องเป็นตัวเลขเท่านั้น',
     'total_items' => 'ข้อมูลทั้งหมด',
     'is_valid' => 'ข้อมูลถูกต้อง',
+    'date' => 'Y-m-d',
 
     'creator' => [
         'creator' => 'ผู้จัดทำใบงาน',

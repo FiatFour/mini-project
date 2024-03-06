@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@include('orders.modal')
 @section('content')
     <div class="content">
         <!-- Search -->
@@ -12,52 +11,39 @@
             <form action="" method="GET">
                 <div class="row mb-4">
                     <div class="col-3">
-                        <x-forms.input id="keyword" :value="$keyword" :label="'คำค้นหา'"
-                                       :optionals="['placeholder' => 'ใส่คำค้นหา']"/>
+                        <x-forms.input id="keyword" :value="$keyword" :label="__('lang.search_label')"
+                                       :optionals="['placeholder' => __('lang.input_search')]"/>
                     </div>
 
                     <div class="col-3">
                         <x-forms.select-option id="id" :value="$id" :list="$d"
-                                               :label="__('orders.name')" />
+                                               :label="__('orders.name')"/>
                     </div>
 
                     <div class="col-3">
-                        <x-forms.input id="order_date" :value="$order_date" :label="__('orders.order_date')" :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+                        <x-forms.input id="order_date" :value="$order_date" :label="__('orders.order_date')"
+                                       :optionals="['input_class' => 'js-flatpickr', 'placeholder' => __('lang.date')]"/>
                     </div>
 
                     <div class="col-3">
-                        <x-forms.input id="shipping_date" :value="$shipping_date" :label="__('orders.shipping_date')" :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d',]"/>
+                        <x-forms.input id="shipping_date" :value="$shipping_date" :label="__('orders.shipping_date')"
+                                       :optionals="['input_class' => 'js-flatpickr', 'placeholder' => __('lang.date')]"/>
                     </div>
                 </div>
-                {{--                <div class="d-flex flex-row d-flex justify-content-end">--}}
-                {{--                    <a href="{{ route('orders.index') }}" class="btn btn-secondary"--}}
-                {{--                        style="margin-left: 4%; width: 100px">ล้างข้อมูล</a>--}}
-                {{--                    <button type="submit" class="btn btn-primary" style="margin-left: 2%; width: 100px">ค้นหา</button>--}}
-                {{--                </div>--}}
                 @include('components.btns.search')
             </form>
         </div>
 
-
-        <!-- All Category -->
         <div class="block block-rounded">
-
             <div class="block-content">
-                <!-- All Category Table -->
                 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                     <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3"></h1>
-{{--                    <a href="{{ route('orders.export-excel') }}" type="button" class="btn btn-alt-success my-2"--}}
-{{--                       style="margin-right: 5px">--}}
-{{--                        <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel--}}
-{{--                    </a>--}}
-
                     <a href="#" type="button" class="btn btn-alt-success my-2" onclick="exportOrders()"
                        style="margin-right: 5px">
-                        <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel
+                        <i class="fa fa-fw fa-plus me-1"></i> {{__('manage.download_excel')}}
                     </a>
-
                     <a href="{{ route('orders.create') }}" type="button" class="btn btn-alt-primary my-2">
-                        <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
+                        <i class="fa fa-fw fa-plus me-1"></i> {{__('manage.btn_add')}}
                     </a>
                 </div>
 
@@ -74,8 +60,7 @@
                             <th>{{__('orders.sub_total')}}</th>
                             <th>{{__('orders.vat')}}</th>
                             <th>{{__('orders.discount')}}</th>
-                            {{-- <th class="d-none d-sm-table-cell">สถานะ</th> --}}
-                            <th class="text-center">{{__('lang.tools')}}</th>
+                            <th class="text-center">{{ __('manage.tools') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -108,35 +93,23 @@
                                     <td class="d-none d-sm-table-cell">
                                         {{ number_format($order->discount, 2) }}
                                     </td>
-                                    <td class="text-center">
-                                        <div class="block-options">
-                                            <div class="dropdown">
-                                                <button type="button" class="btn-block-option"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                    <i class="fa fa-ellipsis-v"></i>
-                                                </button>
-                                                {{-- TODO --}}
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a href="{{ route('orders.show', ['order' => $order]) }}"
-                                                       class="dropdown-item">
-                                                        <i class="fa fa-fw fa-eye me-1"></i> ดูข้อมูล
-                                                    </a>
-                                                    <a href="{{ route('orders.edit', ['order' => $order]) }}"
-                                                       class="dropdown-item">
-                                                        <i class="fa fa-fw fa-edit me-1"></i> แก้ไข
-                                                    </a>
-                                                    <a class="dropdown-item" href="javascript:void(0)"
-                                                       onclick="deleteRecord('{{ $order->id }}')">
-                                                        <i class="fa fa-fw fa-trash-alt me-1"></i> ลบ
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                    <td class="sticky-col text-center">
+                                        @include('components.dropdown-action', [
+                                            'view_route' => route('orders.show', ['order' => $order]),
+                                            'edit_route' => route('orders.edit', ['order' => $order]),
+                                            'delete_route' => route('orders.destroy', [
+                                                'order' => $order,
+                                            ]),
+                                        ])
                                     </td>
                                 </tr>
                             @endforeach
+                        @else
+                            <tr class="table-empty">
+                                <td class="text-center" colspan="8">“
+                                    {{ __('manage.no_list') }} “
+                                </td>
+                            </tr>
                         @endif
                         </tbody>
                     </table>
@@ -156,65 +129,5 @@
 
 @push('scripts')
     <script>
-        function deleteRecord(id) {
-            console.log(id);
-            var url = "{{ route('orders.destroy', 'ID') }}"
-            var newUrl = url.replace('ID', id)
-            Swal.fire({
-                title: "ยืนยันลบข้อมูล",
-                text: "ต้องการลบข้อมูลใช่หรือไม่?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#767E88",
-                cancelButtonText: "ยกเลิก",
-                confirmButtonText: "ยืนยัน"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.delete(newUrl).then(response => {
-                        if (response.data.success) {
-                            Swal.fire({
-                                title: "สำเร็จ",
-                                text: "{{ __('manage.store_success_message') }}",
-                                icon: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "btn btn-success",
-                                confirmButtonText: "ตกลง"
-                            }).then(value => {
-                                if (response.data.redirect) {
-                                    window.location.href = response.data.redirect;
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "เกิดข้อผิดพลาด",
-                                text: response.data.message,
-                                icon: "error",
-                                showCancelButton: false,
-                                confirmButtonColor: "btn btn-danger",
-                                confirmButtonText: "ตกลง"
-                            }).then(value => {
-                                if (value) {
-                                    //
-                                }
-                            });
-                        }
-                    }).catch(error => {
-                        Swal.fire({
-                            title: "เกิดข้อผิดพลาดaa",
-                            text: response.data.message,
-                            icon: "error",
-                            showCancelButton: false,
-                            confirmButtonColor: "btn btn-danger",
-                            confirmButtonText: "ตกลง"
-                        }).then(value => {
-                            if (value) {
-                                //
-                            }
-                        });
-                    });
-                }
-            });
-        }
     </script>
 @endpush

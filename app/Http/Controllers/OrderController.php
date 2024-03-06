@@ -25,7 +25,6 @@ class OrderController extends Controller
         $order_date = $request->order_date;
         $shipping_date = $request->shipping_date;
 
-
         $orders = Order::select('*')
             ->search($request->s, $request)
             ->paginate(5);
@@ -51,7 +50,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
         $validator = Validator::make($request->all(), [
             'order_name' => 'required',
             'order_phone' => 'required|numeric',
@@ -77,10 +75,7 @@ class OrderController extends Controller
         });
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-            ]);
+            return $this->responseValidateAllFailed($validator);
         }
 
         $order = Order::firstOrNew(['id' => $request->order_id]);
@@ -104,21 +99,15 @@ class OrderController extends Controller
         $orderTotal = 0;
 
         foreach ($request->order_detail as $orderDetail) {
-//                $product = Product::select('*')->where('name', $request->order_name)->first();
-//                dd($orderDetail);
-//            $ord = OrderDetail::firstOrNew(['order_id' => $orderDetail['order_id']]);
             $ord = OrderDetail::firstOrNew(['id' => $orderDetail['id']]);
             $ord->order_id = $order->id;
             $ord->product_id = $orderDetail['product_id'];
-//                $ord->category_id = $orderDetail['category_id'];
-//            $ord->amount = $orderDetail['amount'];
             $ord->sub_total = $orderDetail['sub_total'];
             $ord->total = $orderDetail['total'];
             $ord->save();
 
             $orderAmount += $orderDetail['amount'];
             $orderTotal += $orderDetail['total'];
-//                $orderSubTotal += $orderDetail['sub_total'];
         }
 
         if ($request->discount != null) {
@@ -138,11 +127,6 @@ class OrderController extends Controller
 
         $order->save();
 
-//        return response()->json([
-//            'success' => true,
-//            'redirect' => route('orders.index'),
-//        ]);
-
         $redirect_route = route('orders.index');
         return $this->responseValidateSuccess($redirect_route);
     }
@@ -153,9 +137,6 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         if ($order == null) {
-            $message = 'order not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('orders.index');
         }
         $order_detail_list = OrderDetail::select('order_details.*', 'products.category_id AS category_id', 'products.name AS product_name', 'products.price AS price', 'categories.name AS category_name')
@@ -178,9 +159,6 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         if ($order == null) {
-            $message = 'order not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('orders.index');
         }
 
@@ -193,7 +171,6 @@ class OrderController extends Controller
             ->where('order_details.order_id', $order->id)
             ->get();
 
-
         $page_title = __('manage.edit') . __('orders.page_title');
         $edit = true;
 
@@ -205,7 +182,6 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd('hi');
     }
 
     /**
@@ -216,22 +192,11 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if (empty($order)) {
-            Session::flash('error', 'Order not found');
-            return response()->json([
-                'success' => false,
-                'message' => 'Order not found'
-            ]);
+            return $this->responseEmpty('Order');
         }
-
         $order->delete();
 
-        Session::flash('success', 'Order deleted successfully');
-        return response()->json([
-            'success' => true,
-            'message' => 'Order deleted successfully',
-            'redirect' => route('orders.index')
-        ]);
-
+        return $this->responseDeletedSuccess('Order', 'orders.index');
     }
 
     function getPriceAndCategory(Request $request)
@@ -247,26 +212,6 @@ class OrderController extends Controller
         ];
     }
 
-
-//    Don't use
-    public function getProduct(Request $request)
-    {
-        $product = Product::select('products.*', 'categories.name AS categoryName')
-            ->leftJoin('categories', 'categories.id', 'products.category_id')
-            ->where('products.name', $request->productName)
-            ->first();
-
-        if (empty($product)) {
-            return response()->json(['success' => false, 'message' => 'Product not found'], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'categoryName' => $product->categoryName,
-            'price' => $product->price,
-        ]);
-    }
-
     public function export(Request $request)
     {
         $order_id = $request->order_id;
@@ -278,14 +223,6 @@ class OrderController extends Controller
             $order_list = Order::select('*')->get();
             return Excel::download(new OrdersExport($order_list), 'template.xlsx');
         }
-
-//        $order_list = Order::select('orders.*')
-//            ->latest('orders.id')
-//            ->leftJoin('order_details', 'order_details.order_id',
-//                'orders.id')
-//            ->get();
-//        $count_detail = OrderDetail::where('order_id', $order_list->id)->get();
-//        dd($order_list);
     }
 
     public function printOrderDetailsPdf(Request $request){

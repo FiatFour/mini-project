@@ -1,51 +1,50 @@
 <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-    <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">ข้อมูล{{ __('orders.shop') }}</h1>
+    <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">{{ __('orders.info') }}</h1>
     <a href="#" type="button" class="btn btn-alt-success my-2" onclick="exportOrders()"
        style="margin-right: 5px">
-        <i class="fa fa-fw fa-plus me-1"></i> ดาวน์โหลด Excel
+        <i class="fa fa-fw fa-plus me-1"></i> {{__('manage.download_excel')}}
     </a>
     <a href="{{ route('orders.print-detail-pdf') }}" type="button" class="btn btn-alt-danger my-2">
-        <i class="fa fa-fw fa-plus me-1"></i> จัดพิมพ์ PDF
+        <i class="fa fa-fw fa-plus me-1"></i> {{__('manage.pdf')}}
     </a>
 </div>
 
 <div class="row push">
     <div class="col-3">
         <label class="text-start col-form-label" for="shop_code">
-            {{'รหัส' . __('orders.shop')}}
+            {{__('orders.code')}}
         </label>
-        <input disabled type="text" class="form-control col-sm-4" placeholder="กรอกข้อมูลร้านค้า"
+        <input disabled type="text" class="form-control col-sm-4" placeholder=""
                value="{{isset($order) ? $order->shop_code : ' '}}">
         <p></p>
     </div>
     <div class="col-3">
         <x-forms.input id="order_name" :value="$order->name"
-                       :label="'ชื่อผู้สั่งซื้อ/' . __('orders.shop')"
-                       :optionals="['placeholder' => 'กรอกข้อมูลชื่อ' . __('orders.shop')]"/>
+                       :label="__('orders.name')"
+                       :optionals="['placeholder' => __('orders.input_name')]"/>
     </div>
     <div class="col-3">
         <label class="text-start col-form-label" for="order_phone">
-            เบอร์ติดต่อ
+            {{__('orders.phone')}}
         </label>
-        <input type="text" id="order_phone" class="form-control col-sm-4" placeholder="เบอร์ติดต่อ"
+        <input type="text" id="order_phone" class="form-control col-sm-4" placeholder="{{__('orders.input_phone')}}"
                name="order_phone" maxlength="10" value="{{$order->phone}}">
         <p></p>
     </div>
     <div class="col-3">
         <x-forms.input id="order_address" :value="$order->address"
-                       :label="'ที่อยู่' . __('orders.shop') . 'จัดส่ง'"
-                       :optionals="['placeholder' => 'ที่อยู่' . __('orders.shop'). 'จัดส่ง']"/>
+                       :label="__('orders.address')"
+                       :optionals="['placeholder' => __('orders.input_address')]"/>
     </div>
-
     <div class="row mb-4">
         <div class="col-3">
-            <x-forms.input id="order_date" :value="$order->order_date" :label="'วันที่สั่งซื้อ'"
-                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d']"/>
+            <x-forms.input id="order_date" :value="$order->order_date" :label="__('orders.order_date')"
+                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => __('lang.date')]"/>
         </div>
 
         <div class="col-3">
-            <x-forms.input id="shipping_date" :value="$order->shipping_date" :label="'วันที่จัดส่ง'"
-                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => 'Y-m-d']"/>
+            <x-forms.input id="shipping_date" :value="$order->shipping_date" :label="__('orders.shipping_date')"
+                           :optionals="['input_class' => 'js-flatpickr', 'placeholder' => __('lang.date')]"/>
         </div>
     </div>
 </div>

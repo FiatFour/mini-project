@@ -15,7 +15,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
 
-                success: function(result, status, xhr) {
+                success: function (result, status, xhr) {
                     let today = new Date().toISOString().slice(0, 10);
                     var fileName = 'Orders' + today + '.xlsx';
                     var blob = new Blob([result], {
@@ -29,7 +29,7 @@
                     link.click();
                     document.body.removeChild(link);
                 },
-                error: function(result, status, xhr) {
+                error: function (result, status, xhr) {
                     errorAlert("{{ __('lang.not_found') }}");
                 }
             });

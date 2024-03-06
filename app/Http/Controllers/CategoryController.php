@@ -16,7 +16,6 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         $name = $request->name;
         $status = $request->status;
         $code = $request->code;
@@ -24,30 +23,16 @@ class CategoryController extends Controller
         $categories = Category::select('*')
             ->search($request->s, $request)->paginate(PER_PAGE);
 
-        $categories2 = Category::all();
-
-        // dd($categories);
-        // The Array of names of variables we want to create
-
-        $status_obj = $this->status_obj();
+        $categories2 = Category::select('id', 'name');
+        $status_obj = $this->statusObj();
         return view('categories.index', compact('categories', 's', 'status', 'code', 'name', 'categories2', 'status_obj'));
     }
 
-    public function status_obj()
+    public function statusObj()
     {
-        // $status_array = array("id");
-        // $status_array['id'][0] = 'ใช้งาน';
-        // $status_array['id'][1] = 'ไม่ได้ใช้งาน';
-        // $status_obj = new stdClass(); //change array to stdClass object
-        // $status_obj->id[0] = 'ใช้งาน'; //change array to stdClass object
-        // $status_obj->id[1] = 'ไม่ได้ใช้งาน'; //change array to stdClass object
-        // array_push($status_array, "id", "ใช้งาน");
-        // array_push($status_array, "id", "ไม่ได้ใช้งาน");
-        // dd($status_obj);
-
         $status_obj = collect([
             (object)[
-                'status' => 0, // Bug
+                'status' => 2, // Bug
                 'name' => 'ไม่ได้ใช้งาน',
             ],
             (object)[
@@ -56,14 +41,11 @@ class CategoryController extends Controller
             ]
         ]);
 
-        // dd($status_obj);
-
         return $status_obj;
     }
 
     public function create()
     {
-        // $categoryGenes = CategoryGene::orderBy('name', 'ASC')->get();
         $category = new Category();
         $page_title = __('manage.add') . __('categories.page_title');
         return view('categories.form', compact('category', 'page_title'));
@@ -92,14 +74,8 @@ class CategoryController extends Controller
         //TODO
         // $validator->stopOnFirstFailure()->fails()
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-//                'message' => $validator->getMessageBag()->first()
-            ]);
+            return $this->responseValidateAllFailed($validator);
         }
-//        dd($request->status);
-
 
         $category = Category::firstOrNew(['id' => $request->id]);
         $category->code = $request->code;
@@ -108,25 +84,13 @@ class CategoryController extends Controller
         $category->detail = $request->detail;
         $category->save();
 
-        // $message = 'Category added successfully.';
-        // Session::flash('success', $message);
-//            return response()->json([
-//                'success' => true,
-//                'redirect' => route('categories.index'),
-//            ]);
-
         $redirect_route = route('categories.index');
         return $this->responseValidateSuccess($redirect_route);
     }
 
     public function edit(Category $category)
     {
-        // $category = Category::find($id);
-
         if ($category == null) {
-            $message = 'category not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('categories.index');
         }
 
@@ -138,9 +102,6 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         if ($category == null) {
-            $message = 'category not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('categories.index');
         }
         $page_title = __('manage.view') . __('categories.page_title');
@@ -153,20 +114,10 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (empty($category)) {
-            Session::flash('error', 'Category not found');
-            return response()->json([
-                'success' => false,
-                'message' => 'Category not found'
-            ]);
+            return $this->responseEmpty($category);
         }
 
         $category->delete();
-
-        Session::flash('success', 'Category deleted successfully');
-        return response()->json([
-            'success' => true,
-            'message' => 'Category deleted successfully',
-            'redirect' => route('categories.index')
-        ]);
+        return  $this->responseDeletedSuccess('Category', 'categories.index');
     }
 }

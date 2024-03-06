@@ -12,59 +12,58 @@
                     </div>
                 </div>
                 <div class="block-content">
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label class="text-start col-form-label"
-                                       for="productId">{{'ชื่อ' . __('products.page_title')}}</label>
-                                <select class="form-select js-select2-default" id="productName" name="productName"
-                                        style="width: 100%;"
-                                        data-placeholder="เลือก..">
-                                    <option></option>
-                                    <!-- Required for data-placeholder attribute to work with Select2 plugin -->
-                                    @if (!empty($products2))
-                                        @foreach ($products2 as $product)
-                                            <option {{ $product->name == '' ? 'selected' : '' }} value="{{ $product->name }}">
-                                                {{ $product->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-
-                            <div class="col-6">
-                                <label class="text-start col-form-label"
-                                       for="categoryName">{{'ชื่อ' . __('products.page_title')}}</label>
-                                <select class="form-select js-select2-default" id="categoryName" name="categoryName"
-                                        style="width: 100%;"
-                                        data-placeholder="เลือก.." disabled>
-                                    <option></option>
-                                </select>
-                            </div>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label class="text-start col-form-label"
+                                   for="productId">{{'ชื่อ' . __('products.page_title')}}</label>
+                            <select class="form-select js-select2-default" id="productName" name="productName"
+                                    style="width: 100%;"
+                                    data-placeholder="เลือก..">
+                                <option></option>
+                                @if (!empty($products2))
+                                    @foreach ($products2 as $product)
+                                        <option
+                                            {{ $product->name == '' ? 'selected' : '' }} value="{{ $product->name }}">
+                                            {{ $product->name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
 
-                        <div class="row mb-4">
-                            <div class="col-6">
-                                <label class="text-start col-form-label"
-                                       for="price">{{'ชื่อ' . __('products.page_title')}}</label>
-                                <select class="form-select js-select2-default" id="price" name="price"
-                                        style="width: 100%;"
-                                        data-placeholder="เลือก.." disabled>
-                                    <option></option>
-                                </select>
-                            </div>
-
-                            <div class="col-6">
-                                <label class="text-start col-form-label" for="amount">
-                                    จำนวน
-                                </label>
-                                <input type="number" class="form-control col-sm-4" id="amount"
-                                       name="amount" placeholder="00">
-                                <p></p>
-                            </div>
+                        <div class="col-6">
+                            <label class="text-start col-form-label"
+                                   for="categoryName">{{'ชื่อ' . __('products.page_title')}}</label>
+                            <select class="form-select js-select2-default" id="categoryName" name="categoryName"
+                                    style="width: 100%;"
+                                    data-placeholder="เลือก.." disabled>
+                                <option></option>
+                            </select>
                         </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label class="text-start col-form-label"
+                                   for="price">{{'ชื่อ' . __('products.page_title')}}</label>
+                            <select class="form-select js-select2-default" id="price" name="price"
+                                    style="width: 100%;"
+                                    data-placeholder="เลือก.." disabled>
+                                <option></option>
+                            </select>
+                        </div>
+
+                        <div class="col-6">
+                            <label class="text-start col-form-label" for="amount">
+                                จำนวน
+                            </label>
+                            <input type="number" class="form-control col-sm-4" id="amount"
+                                   name="amount" placeholder="00">
+                            <p></p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="block-content block-content-full text-end bg-body">
-{{--                <input type="hidden" name="orderDetailIndex" id="orderDetailIndex" value="orderDetailIndex">--}}
                 <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal">ยกเลิก</button>
                 <button type="button" class="btn btn-sm btn-primary" id="saveOrderDetail">บันทึก</button>
             </div>
@@ -74,36 +73,36 @@
 
 @push('scripts')
     <script>
-        $("#productName").on('change', function(){
+        $("#productName").on('change', function () {
             var productName = $('#productName').val();
             axios.get("{{ route('orders.getProduct') }}", {
                 params: {
                     productName: productName
                 }
             }).then(function (response) {
-                    if (response.data.success === true) {
-                        var categoryName = response.data.categoryName;
-                        var price = response.data.price;
+                if (response.data.success === true) {
+                    var categoryName = response.data.categoryName;
+                    var price = response.data.price;
 
-                        // Clear existing options
-                        $('#categoryName').empty();
-                        $('#price').empty();
+                    // Clear existing options
+                    $('#categoryName').empty();
+                    $('#price').empty();
 
-                        // Add the new option
-                        $('#categoryName').append($('<option>', {
-                            value: categoryName,
-                            text: categoryName
-                        }));
-                        $('#price').append($('<option>', {
-                            value: price,
-                            text: price
-                        }));
+                    // Add the new option
+                    $('#categoryName').append($('<option>', {
+                        value: categoryName,
+                        text: categoryName
+                    }));
+                    $('#price').append($('<option>', {
+                        value: price,
+                        text: price
+                    }));
 
-                        // Trigger Select2 to update the display
-                        $('#categoryName').trigger('change');
-                        $('#price').trigger('change');
-                    }
-                })
+                    // Trigger Select2 to update the display
+                    $('#categoryName').trigger('change');
+                    $('#price').trigger('change');
+                }
+            })
                 .catch(function (error) {
                     console.error('Error fetching product data:', error);
                 });

@@ -72,7 +72,7 @@
                                data-bs-target="#modal-block-popout">
                                 <i class="fa fa-fw fa-plus me-1"></i> เพึ่มข้อมูล
                             </a>
-                            @include('orders.modal')
+                            @include('orders.Backup.modal')
                         </div>
                     @endif
 

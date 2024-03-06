@@ -2,18 +2,18 @@
     @if($order_id != null)
         <thead>
         <tr>
-            <th>รหัสร้านค้า</th>
-            <th>ชื่อผู้สั่งซื้อ/ร้านค้า</th>
-            <th>เบอร์ติดต่อ</th>
-            <th>ที่อยู่ร้านค้าจัดส่ง</th>
-            <th>วันที่ซื้อ</th>
-            <th>วันที่จัดส่ง</th>
-            <th>จำนวนสินค้า</th>
-            <th>จำนวนสินค้าเงินรวมทั้งสิ้น</th>
-            <th>จำนวนสินค้าเงินรวมทั้งสิ้น(ไม่รวม VAT)</th>
-            <th>ราคา VAT 7%</th>
-            <th>ส่วนลด</th>
-            <th>ราคาหักภาษี ณ ที่จ่าย 3 %</th>
+            <th>{{ __('categories.code') }}</th>
+            <th>{{ __('categories.name') }}</th>
+            <th>{{ __('categories.phone') }}</th>
+            <th>{{ __('categories.phone') }}</th>
+            <th>{{ __('categories.order_date') }}</th>
+            <th>{{ __('categories.shipping_date') }}</th>
+            <th>{{ __('categories.amount') }}</th>
+            <th>{{ __('categories.total') }}</th>
+            <th>{{ __('categories.sub_total') }}</th>
+            <th>{{ __('categories.vat') }}</th>
+            <th>{{ __('categories.discount') }}</th>
+            <th>{{ __('categories.withholding_tax') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -60,15 +60,15 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>ชื่อผู้สั่งซื้อ/ร้านค้า</th>
-            <th>วันที่ซื้อ</th>
-            <th>วันที่จัดส่ง</th>
-            <th>จำนวนสินค้า</th>
-            <th>จำนวนสินค้าเงินรวมทั้งสิ้น</th>
-            <th>จำนวนสินค้าเงินรวมทั้งสิ้น(ไม่รวม VAT)</th>
-            <th>ราคา VAT 7%</th>
-            <th>ส่วนลด</th>
-            <th>ราคาหักภาษี ณ ที่จ่าย 3 %</th>
+            <th>{{ __('categories.name') }}</th>
+            <th>{{ __('categories.order_date') }}</th>
+            <th>{{ __('categories.shipping_date') }}</th>
+            <th>{{ __('categories.amount') }}</th>
+            <th>{{ __('categories.sub_total') }}</th>
+            <th>{{ __('categories.total') }}</th>
+            <th>{{ __('categories.vat') }}</th>
+            <th>{{ __('categories.discount') }}</th>
+            <th>{{ __('categories.withholding_tax') }}</th>
         </tr>
         </thead>
         <tbody>

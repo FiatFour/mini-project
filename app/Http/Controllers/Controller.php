@@ -17,6 +17,13 @@ class Controller extends BaseController
             'message' => $validator->getMessageBag()->first()
         ], 422);
     }
+    function responseValidateAllFailed($validator)
+    {
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors(),
+        ]);
+    }
 
     function responseValidateSuccess($redirect)
     {
@@ -40,6 +47,20 @@ class Controller extends BaseController
         return response()->json([
             'success' => false,
             'message' => $message,
+        ]);
+    }
+    function responseEmpty($message)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message . 'not found',
+        ]);
+    }
+    function responseDeletedSuccess($message, $redirect)
+    {
+        return response()->json(['success' => true,
+            'message' => $message . 'deleted successfully',
+            'redirect' => route($redirect)
         ]);
     }
 }
