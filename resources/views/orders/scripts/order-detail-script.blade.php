@@ -92,7 +92,7 @@
                 },
                 saveAdd: function (order_detail) {
                     this.order_detail_list.push(order_detail);
-                    console.log(this.order_detail_list);
+                    // console.log(this.order_detail_list);
                 },
                 saveEdit: function (order_detail, index) {
                     addOrderDetailVue.$set(this.order_detail_list, index, order_detail);

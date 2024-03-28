@@ -18,14 +18,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-//        $this->authorize(Actions::View . '_' . Resources::User);
         $name = $request->name;
         $username = $request->username;
         $s = $request->s;
         $users = User::select('*')
             ->search($request->s, $request)->paginate(PER_PAGE);
 
-        $users2 = User::all();
+        $users2 = User::select('id', 'name')->get();
 
         return view(
             'users.index',
@@ -41,10 +40,8 @@ class UserController extends Controller
 
     public function create()
     {
-//        $this->authorize(Actions::Manage . '_' . Resources::User);
         $user = new User();
         $page_title = __('manage.add') . __('users.page_title');
-        // $userGenes = UserGene::orderBy('name', 'ASC')->get();
         return view(
             'users.form',
             [
@@ -59,8 +56,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
-
         $validator = Validator::make($request->all(), [
 //            'username' =>  $request->id == null ? 'required|unique:users' : 'required|unique:users,username,'.$request->id.',id',
             'username' => [
@@ -110,23 +105,13 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->save();
 
-//            return response()->json([
-//                'success' => true,
-//                'redirect' => route('users.index'),
-//            ]);
-
         $redirect_route = route('users.index');
         return $this->responseValidateSuccess($redirect_route);
     }
 
     public function edit(User $user)
     {
-        // $user = User::find($id);
-//        $this->authorize(Actions::Manage . '_' . Resources::User);
         if ($user == null) {
-            $message = 'user not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('users.index');
         }
         $page_title = __('manage.edit') . __('users.page_title');
@@ -136,14 +121,9 @@ class UserController extends Controller
         ));
     }
 
-    //TODO
     public function show(User $user)
     {
-//        $this->authorize(Actions::View . '_' . Resources::User);
         if ($user == null) {
-            $message = 'user not found.';
-            Session::flash('error', $message);
-
             return redirect()->route('users.index');
         }
         $page_title = __('manage.show') . __('users.page_title');
@@ -153,24 +133,13 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-//        $this->authorize(Actions::Manage . '_' . Resources::User);
         $user = User::find($id);
 
         if (empty($user)) {
-            Session::flash('error', 'User not found');
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found'
-            ]);
+            return $this->responseEmpty('User');
         }
 
         $user->delete();
-
-        Session::flash('deleted', 'User deleted successfully');
-        return response()->json([
-            'success' => true,
-            'message' => 'User deleted successfully',
-            'redirect' => route('users.index')
-        ]);
+        return $this->responseDeletedSuccess('User', 'users.index');
     }
 }
